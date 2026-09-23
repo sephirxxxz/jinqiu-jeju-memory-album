@@ -649,137 +649,125 @@ function renderStation(index) {
 
   const isMountainGallery = !!details.fullWidthGallery;
   const isVariety = !!details.variety;
-  let climbRevealArea = null;
   world.append(surface, centerLine, wordmark, interactionSign);
   if (isMountainGallery) {
-    const climbZone = make('div', 'climb-zone');
-    const climbHint = make('p', 'climb-hint', '点击任意处，让照片从这里向整页铺开');
+    world.classList.add('road-world-spread');
+    const decor = make('div', 'climb-decor');
+    world.querySelectorAll('.road-prop, .kr-tag').forEach((node) => decor.append(node));
+    const stage = make('div', 'climb-stage');
+    const leftSide = make('div', 'climb-side climb-side-left');
+    const rightSide = make('div', 'climb-side climb-side-right');
+    leftSide.setAttribute('aria-live', 'polite');
+    rightSide.setAttribute('aria-live', 'polite');
+    const core = make('div', 'climb-core');
+    const climbHint = make('p', 'climb-hint', '点击任意处，让照片从卡片左右两边铺开');
     const revealButton = make('button', 'climb-reveal-button', '点击铺开汉拿山照片');
     revealButton.type = 'button';
-    const climbCount = make('p', 'climb-count', `已铺开 0 / ${scene.allImages.length} 张`);
-    climbZone.append(climbHint, revealButton, climbCount);
-    world.append(climbZone);
 
-    climbRevealArea = make('section', 'climb-reveal-area');
-    climbRevealArea.setAttribute('aria-label', '汉拿山照片全宽展示');
-    const galleryTitle = make('h2', 'climb-gallery-title', '把汉拿山的回忆，铺满整页');
-    const galleryIntro = make('p', 'climb-gallery-intro', '每点一次，4 张照片从点击处飞入照片墙；点单张照片可放大查看。');
-    const galleryToolbar = make('div', 'climb-gallery-toolbar');
-    const galleryCount = make('p', 'climb-count', `已铺开 0 / ${scene.allImages.length} 张`);
+    // 只铺开精选的那几张（roadData 里已挑好），保证全部落位后仍在一屏之内。
+    // 其余照片仍可从单张放大后左右翻看，也在页尾「打开完整相册」里。
+    const spreadImages = scene.images.length ? scene.images : scene.allImages;
+    const lightboxImages = scene.allImages.length ? scene.allImages : scene.images;
+    const revealBatchSize = 4;
+    const climbCount = make('p', 'climb-count', `已铺开 0 / ${spreadImages.length} 张`);
     const progressTrack = make('div', 'climb-progress-track');
     progressTrack.setAttribute('role', 'progressbar');
     progressTrack.setAttribute('aria-label', '汉拿山照片展开进度');
     progressTrack.setAttribute('aria-valuemin', '0');
-    progressTrack.setAttribute('aria-valuemax', String(scene.allImages.length));
+    progressTrack.setAttribute('aria-valuemax', String(spreadImages.length));
     progressTrack.setAttribute('aria-valuenow', '0');
     const progressFill = make('span', 'climb-progress-fill');
     progressTrack.append(progressFill);
-    const galleryRevealButton = make('button', 'climb-reveal-button', '点击继续铺开照片');
-    galleryRevealButton.type = 'button';
-    galleryToolbar.append(galleryCount, progressTrack, galleryRevealButton);
-    const gallery = make('div', 'climb-gallery');
-    gallery.setAttribute('aria-live', 'polite');
-    const climbDone = make('div', 'climb-done');
-    climbDone.hidden = true;
-    const doneButton = make('button', 'archive-button', '打开汉拿山完整合集');
-    doneButton.type = 'button';
-    doneButton.addEventListener('click', () => openSceneArchive(index, 0, doneButton));
-    climbDone.append(doneButton);
-    climbRevealArea.append(galleryTitle, galleryIntro, galleryToolbar, gallery, climbDone);
+    core.append(climbHint, revealButton, climbCount, progressTrack, commentButton);
+    stage.append(leftSide, core, rightSide, decor);
+    world.append(stage);
 
-    const mountainImages = scene.allImages.length ? scene.allImages : scene.images;
-    const revealBatchSize = 4;
+    // 先把所有格子按左右两列排好并占住位置，点击时只往格子里填内容。
+    // 布局从加载到结束都不变，所以中间卡片不会移动，也不会因为重排而卡顿。
+    const slots = spreadImages.map((file, imageIndex) => {
+      const slot = make('button', 'climb-gallery-photo is-empty');
+      slot.type = 'button';
+      // order 只影响窄屏：那时左右两列会压成两栏排在卡片下方，
+      // 靠 order 保证照片仍然按挑选顺序 0、1、2… 排列。
+      slot.style.order = String(imageIndex);
+      (imageIndex % 2 === 0 ? leftSide : rightSide).append(slot);
+      return slot;
+    });
+
     let revealedCount = 0;
-    const animatePhotoSpread = (photos, origin) => {
-      if (reducedMotion.matches || !origin) return;
-      const flash = make('span', 'climb-spread-flash');
-      flash.setAttribute('aria-hidden', 'true');
-      flash.style.left = `${origin.x}px`;
-      flash.style.top = `${origin.y}px`;
-      document.body.append(flash);
-      if (typeof flash.animate === 'function') {
-        const flashAnimation = flash.animate([
-          { opacity: .85, transform: 'translate(-50%, -50%) scale(.15)' },
-          { opacity: 0, transform: 'translate(-50%, -50%) scale(2.8)' }
-        ], { duration: 520, easing: 'cubic-bezier(.2,.7,.2,1)' });
-        flashAnimation.onfinish = () => flash.remove();
-      } else {
-        setTimeout(() => flash.remove(), 520);
-      }
-
+    let spreadBusy = false;
+    const spreadFromCard = (entries) => {
+      if (reducedMotion.matches) return;
+      const card = core.getBoundingClientRect();
+      const originX = card.left + card.width / 2;
+      const originY = card.top + card.height / 2;
       requestAnimationFrame(() => {
-        photos.forEach((photo, index) => {
-          const rect = photo.getBoundingClientRect();
-          const dx = origin.x - (rect.left + rect.width / 2);
-          const dy = origin.y - (rect.top + rect.height / 2);
-          const spin = index % 2 ? 6 : -6;
-          if (typeof photo.animate === 'function') {
-            const spreadAnimation = photo.animate([
-              { opacity: 0, filter: 'blur(3px)', transform: `translate(${dx}px, ${dy}px) scale(.16) rotate(${spin}deg)` },
-              { opacity: 1, filter: 'blur(0)', transform: 'translate(0, 0) scale(1.045) rotate(0deg)', offset: .78 },
-              { opacity: 1, filter: 'blur(0)', transform: 'translate(0, 0) scale(1) rotate(0deg)' }
-            ], { duration: 820, delay: index * 85, easing: 'cubic-bezier(.18,.72,.23,1)', fill: 'both' });
-            spreadAnimation.onfinish = () => spreadAnimation.cancel();
-          } else {
-            photo.classList.add('is-entering');
+        entries.forEach(({ el, side }, index) => {
+          const rect = el.getBoundingClientRect();
+          const dx = originX - (rect.left + rect.width / 2);
+          const dy = originY - (rect.top + rect.height / 2);
+          const tilt = side === 'left' ? -4 : 4;
+          if (typeof el.animate !== 'function') {
+            el.classList.add('is-entering');
+            return;
           }
+          // 只动 opacity / transform：起点在卡片中心（被卡片挡住），
+          // 于是照片看起来是从卡片左右两侧被推出来的。
+          const animation = el.animate([
+            { opacity: 0, transform: `translate(${dx}px, ${dy}px) scale(.88) rotate(${tilt}deg)` },
+            { opacity: 1, transform: 'translate(0, 0) scale(1.02) rotate(0deg)', offset: .7 },
+            { opacity: 1, transform: 'translate(0, 0) scale(1) rotate(0deg)' }
+          ], { duration: 420, delay: index * 55, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' });
+          animation.onfinish = () => animation.cancel();
         });
       });
     };
-    const revealNextBatch = (event) => {
-      if (revealedCount >= mountainImages.length) return;
-      let origin;
-      if (event && event.detail > 0) origin = { x: event.clientX, y: event.clientY };
-      else {
-        const anchor = event?.currentTarget?.getBoundingClientRect() || revealButton.getBoundingClientRect();
-        origin = { x: anchor.left + anchor.width / 2, y: anchor.top + anchor.height / 2 };
-      }
-      const newPhotos = [];
-      const batch = mountainImages.slice(revealedCount, revealedCount + revealBatchSize);
-      batch.forEach((file, batchIndex) => {
-        const imageIndex = revealedCount + batchIndex;
-        const photo = make('button', 'climb-gallery-photo');
-        photo.type = 'button';
-        photo.setAttribute('aria-label', `放大查看汉拿山第 ${imageIndex + 1} 张照片`);
+    const revealNextBatch = async () => {
+      if (spreadBusy || revealedCount >= spreadImages.length) return;
+      spreadBusy = true;
+      decor.classList.add('is-active');
+      const startIndex = revealedCount;
+      const batch = spreadImages.slice(startIndex, startIndex + revealBatchSize);
+      const prepared = batch.map((file, offset) => {
+        const imageIndex = startIndex + offset;
+        const slot = slots[imageIndex];
         const img = make('img');
         img.src = imageUrl(file);
         img.alt = `汉拿山现场照片 ${imageIndex + 1}`;
-        img.loading = imageIndex < 8 ? 'eager' : 'lazy';
         img.decoding = 'async';
-        photo.append(img);
-        photo.addEventListener('click', () => openPhotoLightbox(mountainImages, imageIndex, scene.title));
-        gallery.append(photo);
-        newPhotos.push(photo);
+        slot.append(img);
+        return { slot, img, imageIndex };
       });
-      revealedCount += batch.length;
-      animatePhotoSpread(newPhotos, origin);
-      const countText = `已铺开 ${revealedCount} / ${mountainImages.length} 张`;
-      climbCount.textContent = countText;
-      galleryCount.textContent = countText;
+      revealedCount = startIndex + prepared.length;
+      // 等图片解码完再入场，避免先看到一个空框再闪出图片。
+      await Promise.all(prepared.map(({ img }) => (typeof img.decode === 'function' ? img.decode().catch(() => {}) : Promise.resolve())));
+      const entries = prepared.map(({ slot, imageIndex }) => {
+        slot.classList.remove('is-empty');
+        slot.setAttribute('aria-label', `放大查看汉拿山第 ${imageIndex + 1} 张照片`);
+        slot.addEventListener('click', () => openPhotoLightbox(lightboxImages, imageIndex, scene.title));
+        return { el: slot, side: imageIndex % 2 === 0 ? 'left' : 'right' };
+      });
+      spreadFromCard(entries);
+      climbCount.textContent = `已铺开 ${revealedCount} / ${spreadImages.length} 张`;
       progressTrack.setAttribute('aria-valuenow', String(revealedCount));
-      progressFill.style.width = `${(revealedCount / mountainImages.length) * 100}%`;
-      if (revealedCount >= mountainImages.length) {
+      progressFill.style.transform = `scaleX(${(revealedCount / spreadImages.length).toFixed(3)})`;
+      if (revealedCount >= spreadImages.length) {
         revealButton.textContent = '汉拿山照片已全部铺开';
-        galleryRevealButton.textContent = '所有照片已铺开';
         revealButton.disabled = true;
-        galleryRevealButton.disabled = true;
-        climbHint.textContent = '全部照片都在这里了';
-        climbDone.hidden = false;
+        const rest = Math.max(lightboxImages.length - spreadImages.length, 0);
+        climbHint.textContent = rest
+          ? `这 ${spreadImages.length} 张精选都在这里了；其余 ${rest} 张在页尾的完整相册里。`
+          : '全部照片都在这里了。';
       } else {
-        const nextCount = Math.min(revealBatchSize, mountainImages.length - revealedCount);
+        const nextCount = Math.min(revealBatchSize, spreadImages.length - revealedCount);
         revealButton.textContent = `继续铺开 · 再看 ${nextCount} 张`;
-        galleryRevealButton.textContent = `继续铺开 · 再看 ${nextCount} 张`;
       }
+      spreadBusy = false;
     };
     revealButton.addEventListener('click', revealNextBatch);
-    galleryRevealButton.addEventListener('click', revealNextBatch);
     world.addEventListener('click', (event) => {
       if (event.target.closest('button, a, input, textarea')) return;
-      revealNextBatch(event);
-    });
-    climbRevealArea.addEventListener('click', (event) => {
-      if (event.target.closest('button, a')) return;
-      revealNextBatch(event);
+      revealNextBatch();
     });
   } else if (!isVariety) {
     const appendPhoto = (stack, imageIndex) => {
@@ -829,7 +817,6 @@ function renderStation(index) {
   }
 
   station.append(heading, world);
-  if (climbRevealArea) station.append(climbRevealArea);
   station.append(echo);
   return station;
 }

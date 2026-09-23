@@ -533,42 +533,43 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; transform: none; }
 .variety-who-name { line-height: 1; }
 .variety-card .reaction-bar { margin-top: 11px; }
 
-/* ---- 汉拿山：每次点击将照片逐批铺满全宽照片墙 ---- */
-.climb-zone { position: relative; z-index: 8; width: min(520px, 88%); min-height: 210px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 11px; text-align: center; }
-.climb-hint { margin: 0; color: var(--muted); font-size: 13px; letter-spacing: .04em; }
+/* ---- 汉拿山：照片从中间文字向左右两侧铺开 ---- */
+.road-world.road-world-spread { width: 100vw; max-width: none; height: auto; margin-left: calc(50% - 50vw); margin-right: 0; }
+.road-world-spread .road-surface, .road-world-spread .road-center-line, .road-world-spread .road-wordmark, .road-world-spread .road-interaction-sign { display: none; }
+.climb-stage { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(228px, 300px) minmax(0, 1fr); align-items: center; gap: clamp(14px, 2.4vw, 44px); width: min(1560px, 96vw); margin: 0 auto; padding: clamp(26px, 4vw, 64px) clamp(12px, 2vw, 30px); }
+.climb-side { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(8px, 1.1vw, 16px); align-content: center; }
+.climb-core { position: relative; z-index: 6; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 26px 20px; border: 1px solid rgba(55,69,79,.14); border-radius: 18px; background: rgba(250,243,225,.95); box-shadow: 0 18px 34px rgba(96,84,60,.14); text-align: center; }
+.climb-hint { margin: 0; min-height: 3.2em; line-height: 1.6; color: var(--muted); font-size: 13px; letter-spacing: .04em; }
 .climb-count { margin: 0; color: var(--blue-soft); font: 10px var(--mono); letter-spacing: .06em; }
 .climb-reveal-button { min-height: 42px; padding: 11px 18px; color: #fff; border: 1px solid rgba(55,69,79,.14); border-radius: 999px; background: var(--blue); box-shadow: 0 9px 20px rgba(59,51,40,.18); font-size: 12px; transition: transform .2s ease, background .2s ease; }
 .climb-reveal-button:hover { background: var(--cyan); transform: translateY(-2px); }
 .climb-reveal-button:disabled { cursor: default; opacity: .72; transform: none; }
-.climb-reveal-area { position: relative; left: 50%; width: 100vw; margin: 44px 0 0 -50vw; padding: clamp(34px, 5vw, 72px) clamp(16px, 3.4vw, 54px) 58px; background: linear-gradient(180deg, rgba(232,223,201,.68), rgba(244,238,225,.96)); border-top: 1px solid rgba(55,69,79,.12); border-bottom: 1px solid rgba(55,69,79,.12); cursor: pointer; }
-.climb-gallery-title { margin: 0; color: var(--ink); font: 500 clamp(30px, 4vw, 52px)/1.15 var(--display); letter-spacing: -.055em; text-align: center; }
-.climb-gallery-intro { margin: 12px auto 22px; color: var(--muted); font-size: 13px; line-height: 1.8; text-align: center; }
-.climb-gallery-toolbar { position: sticky; z-index: 9; top: 12px; display: flex; align-items: center; justify-content: center; gap: 16px; width: fit-content; max-width: 100%; margin: 0 auto 24px; padding: 8px 10px 8px 16px; border: 1px solid rgba(55,69,79,.15); border-radius: 999px; background: rgba(250,243,225,.94); box-shadow: 0 8px 22px rgba(96,84,60,.12); cursor: default; }
-.climb-gallery-toolbar .climb-count { white-space: nowrap; }
 .climb-progress-track { flex: 0 0 auto; width: 92px; height: 4px; overflow: hidden; border-radius: 999px; background: rgba(55,69,79,.15); }
-.climb-progress-fill { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--cyan), #e4ad6f); box-shadow: 0 0 9px rgba(185,122,78,.42); transition: width .65s cubic-bezier(.2,.75,.2,1); }
-.climb-gallery-toolbar .climb-reveal-button { min-height: 36px; padding: 8px 14px; box-shadow: none; }
-.climb-gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(10px, 1.7vw, 24px); width: 100%; margin: 0 auto; }
+.climb-progress-fill { display: block; width: 100%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--cyan), #e4ad6f); box-shadow: 0 0 9px rgba(185,122,78,.42); transform: scaleX(0); transform-origin: left center; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+.climb-core .climb-progress-track { width: min(190px, 100%); }
+.climb-core .road-comment-action { width: 100%; }
+.climb-decor { position: absolute; z-index: 5; top: 50%; left: 50%; width: 520px; height: 610px; transform: translate(-50%, -50%); pointer-events: none; opacity: 0; transition: opacity .5s ease; }
+.climb-decor.is-active { opacity: 1; }
 .climb-gallery-photo { display: block; width: 100%; min-width: 0; aspect-ratio: 4 / 3; padding: clamp(5px, .8vw, 10px); border: 1px solid rgba(55,69,79,.17); border-radius: 8px; background: #f7f0df; box-shadow: 0 12px 24px rgba(96,84,60,.13); cursor: zoom-in; transition: box-shadow .22s ease, transform .22s ease; }
-.climb-gallery-photo.is-entering { animation: climb-photo-fallback .78s cubic-bezier(.18,.72,.23,1) both; }
-.climb-spread-flash { position: fixed; z-index: 20; width: 52px; height: 52px; border: 1px solid rgba(255,250,235,.8); border-radius: 50%; background: radial-gradient(circle, rgba(255,244,204,.92) 0 8%, rgba(228,173,111,.55) 28%, rgba(185,122,78,.12) 63%, transparent 72%); box-shadow: 0 0 28px rgba(228,173,111,.38); pointer-events: none; }
-.climb-gallery-photo:hover, .climb-gallery-photo:focus-visible { z-index: 1; box-shadow: 0 18px 34px rgba(96,84,60,.23); transform: translateY(-3px) rotate(-.4deg); }
+/* 预留的格子：占位但不可见，保证布局从头到尾不变 */
+.climb-gallery-photo.is-empty { visibility: hidden; }
+.climb-gallery-photo.is-entering { animation: climb-photo-fallback .42s cubic-bezier(.2,.8,.2,1) both; }
+@media (hover: hover) and (pointer: fine) {
+  .climb-gallery-photo:hover { z-index: 1; box-shadow: 0 18px 34px rgba(96,84,60,.23); transform: translateY(-3px) rotate(-.4deg); }
+}
+.climb-gallery-photo:focus-visible { z-index: 1; box-shadow: 0 18px 34px rgba(96,84,60,.23); transform: translateY(-3px) rotate(-.4deg); }
 .climb-gallery-photo img { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: 3px; background: #e9dfc7; }
-.climb-done { display: flex; justify-content: center; margin-top: 34px; }
-.climb-done .archive-button { margin-top: 0; }
-@keyframes climb-photo-fallback { 0% { opacity: 0; filter: blur(3px); transform: translateY(24px) scale(.82) rotate(-3deg); } 72% { opacity: 1; transform: translateY(-4px) scale(1.035) rotate(.5deg); } 100% { opacity: 1; filter: none; transform: none; } }
+@keyframes climb-photo-fallback { 0% { opacity: 0; transform: translateY(14px) scale(.9); } 70% { opacity: 1; transform: translateY(-3px) scale(1.02); } 100% { opacity: 1; transform: none; } }
 @media (max-width: 1000px) {
-  .climb-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .climb-stage { grid-template-columns: minmax(0, 1fr) minmax(200px, 260px) minmax(0, 1fr); gap: 16px; }
 }
 @media (max-width: 800px) {
   .variety-grid { grid-template-columns: 1fr; gap: 14px; }
-  .climb-zone { width: 100%; min-height: 200px; }
-  .climb-reveal-area { padding: 38px 15px 42px; }
-  .climb-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .climb-gallery-toolbar { gap: 7px; padding: 7px 8px; }
-  .climb-progress-track { width: 48px; }
-  .climb-gallery-toolbar .climb-count { font-size: 9px; }
-  .climb-gallery-toolbar .climb-reveal-button { padding: 8px 10px; font-size: 10px; }
+  .climb-stage { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: 100%; padding: 30px 14px 38px; }
+  .climb-core { grid-column: 1 / -1; order: -1; width: 100%; padding: 22px 16px; margin-bottom: 8px; }
+  .climb-side { display: contents; }
+  .climb-core .climb-progress-track { width: 120px; }
+  .climb-decor { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .climb-gallery-photo.is-entering { animation: none; }
