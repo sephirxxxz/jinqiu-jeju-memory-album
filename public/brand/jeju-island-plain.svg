@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 200" width="360" height="200">
+  <!-- 和 jeju-island.svg 是同一张图，只是去掉了 한라산 / 제주도 两个标签：
+       汉拿山小方块里的文字会正好压在标签上，两个都看不清。
+       改形状或配色时，两个文件要一起改。 -->
+  <style>
+    .island-stroke { fill: rgba(180,222,210,.22); stroke: rgba(58,132,124,.55); stroke-width: 3; stroke-linejoin: round; }
+    .island-bump { fill: rgba(180,222,210,.28); stroke: rgba(58,132,124,.45); stroke-width: 2; }
+    .island-berry { fill: #f4a04f; }
+    .island-bird { fill: none; stroke: rgba(58,132,124,.7); stroke-width: 2.5; stroke-linecap: round; }
+    .volcano-body { fill: rgba(109,148,128,.5); stroke: rgba(58,132,124,.5); stroke-width: 2; stroke-linejoin: round; }
+    .volcano-crater { fill: #d9a06b; stroke: rgba(112,86,52,.4); stroke-width: 1.5; }
+    .volcano-plume { fill: none; stroke: rgba(255,255,255,.75); stroke-width: 3; stroke-linecap: round; }
+    .island-peak-dot { fill: #e98a5f; }
+    .island-volcano { transform: translateY(10px); }
+  </style>
+  <path class="island-stroke" d="M 34 118 C 30 168 118 190 214 177 C 306 165 342 120 318 76 C 300 30 224 14 148 24 C 76 34 40 70 34 118 Z" />
+  <circle class="island-bump" cx="306" cy="84" r="13" />
+  <circle class="island-berry" cx="120" cy="112" r="4" />
+  <circle class="island-berry" cx="208" cy="140" r="5" />
+  <circle class="island-berry" cx="252" cy="96" r="4" />
+  <path class="island-bird" d="M 96 60 Q 104 52 112 60 M 114 60 Q 122 52 130 60" />
+  <g class="island-volcano">
+    <path class="volcano-body" d="M 150 110 L 168 70 L 186 110 Z" />
+    <path class="volcano-crater" d="M 162 76 L 174 76 L 172 81 L 164 81 Z" />
+    <path class="volcano-plume" d="M 168 62 C 163 54 173 48 168 40 C 164 34 173 28 170 22" />
+  </g>
+  <circle class="island-peak-dot" cx="168" cy="66" r="3" />
+</svg>

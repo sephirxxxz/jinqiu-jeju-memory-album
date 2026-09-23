@@ -25,9 +25,6 @@ button { border: 0; cursor: pointer; }
 a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline: 2px solid var(--cyan); outline-offset: 5px; }
 
 
-.route-header { position: absolute; z-index: 20; top: 0; left: 0; padding: 21px 4.5vw; pointer-events: none; }
-.route-brand { display: block; pointer-events: auto; }
-.route-brand img { display: block; width: 34px; height: auto; }
 .route-track { position: relative; height: 1600svh; background: var(--sky); }
 .route-stage { position: sticky; top: 0; height: 100svh; min-height: 620px; overflow: hidden; isolation: isolate; perspective: 1400px; perspective-origin: 50% 48%; background: var(--sky); }
 .sky-layer, .route-background-line { position: absolute; inset: 0; pointer-events: none; }
@@ -189,8 +186,6 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
 .route-footer > span { color: rgba(233,221,192,.7); }
 
 @media (max-width: 800px) {
-  .route-header { padding: 16px 20px; }
-  .route-brand img { width: 29px; }
   .route-launch h1 { margin-bottom: 13px; font-size: 43px; }
   .route-theme strong { font-size: 27px; }
   .route-stage { min-height: 560px; }
@@ -233,6 +228,8 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
   .photo-lightbox-figure img { max-height: 62svh; border-radius: 9px; }
   .photo-lightbox-controls { gap: 8px; margin-top: 13px; }
   .photo-lightbox-controls button, .photo-lightbox-exit { padding: 8px 10px; }
+  .video-brand { padding: 16px 20px; }
+  .video-brand img { width: 38px; }
   .video-area { padding: 76px 0 84px; }
   .video-hero { min-height: 100svh; padding: 65px 0 58px; }
   .video-hero .video-frame { margin-bottom: 0; }
@@ -265,20 +262,10 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
 .route-track { height: auto !important; background: var(--sky); }
 .route-stage { position: relative; top: auto; height: auto; min-height: 0; overflow: visible; perspective: 1400px; }
 .route-launch { position: relative; top: auto; left: auto; min-height: 100svh; margin: 0 auto; padding: 120px 20px 90px; transform: none !important; }
-.route-launch-logo { display: block; width: 76px; height: auto; margin: 14px 0 24px; filter: drop-shadow(0 13px 18px rgba(55,69,79,.16)); }
 .island-bg { position: absolute; top: calc(46% + 100px); left: 50%; width: min(520px, 78vw); transform: translate(-50%, -46%); pointer-events: none; }
-.island-shape { display: block; width: 100%; height: auto; overflow: visible; }
-.island-stroke { fill: rgba(180,222,210,.22); stroke: rgba(58,132,124,.55); stroke-width: 3; stroke-linejoin: round; }
-.island-bump { fill: rgba(180,222,210,.28); stroke: rgba(58,132,124,.45); stroke-width: 2; }
-.island-berry { fill: #f4a04f; }
-.island-bird { fill: none; stroke: rgba(58,132,124,.7); stroke-width: 2.5; stroke-linecap: round; }
-.island-text { fill: rgba(41,102,105,.62); font: 600 21px/1 'PingFang SC', 'Microsoft YaHei', sans-serif; letter-spacing: .12em; }
-.volcano-body { fill: rgba(109,148,128,.5); stroke: rgba(58,132,124,.5); stroke-width: 2; stroke-linejoin: round; }
-.volcano-crater { fill: #d9a06b; stroke: rgba(112,86,52,.4); stroke-width: 1.5; }
-.volcano-plume { fill: none; stroke: rgba(255,255,255,.75); stroke-width: 3; stroke-linecap: round; }
-.island-peak-dot { fill: #e98a5f; }
-.island-volcano-label { fill: rgba(112,86,52,.72); font: 600 12px/1 'PingFang SC', 'Microsoft YaHei', sans-serif; letter-spacing: .08em; }
-.island-volcano { transform: translateY(10px); }
+/* 济州岛的颜色样式现在放在 public/brand/jeju-island.svg 里，
+   这样第二页和汉拿山小方块共用同一份，不会出现两个副本以后改漏。 */
+.island-shape { display: block; width: 100%; height: auto; }
 .island-road { position: absolute; left: 50%; bottom: 0; width: 2px; height: 130px; background: linear-gradient(180deg, rgba(185,122,78,.38), rgba(185,122,78,.08)); transform: translateX(-50%) scaleY(0); transform-origin: top; box-shadow: 0 0 12px rgba(185,122,78,.25); }
 .road-fade .island-bg { opacity: 0; transform: translate(-50%, calc(-46% + 60px)) scale(.9); }
 .road-fade .island-road { transform: translateX(-50%) scaleY(1); }
@@ -355,7 +342,6 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
 .prop-backpack::after { position: absolute; left: 8px; right: 8px; top: 13px; height: 4px; content: ''; border-radius: 3px; background: #f0c281; }
 @media (max-width: 800px) {
   .route-launch { min-height: 100svh; padding: 96px 20px 70px; }
-  .route-launch-logo { width: 58px; margin-bottom: 19px; }
   .activity-station { width: 100%; padding: 76px 17px 50px; }
   .road-world { height: min(58svh, 470px); }
   .station-echo { width: calc(100% - 20px); margin-top: 58px; padding: 31px 20px 34px; }
@@ -541,8 +527,11 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; transform: none; }
 .road-world.road-world-spread { width: 100vw; max-width: none; height: auto; margin-left: calc(50% - 50vw); margin-right: 0; }
 .road-world-spread .road-surface, .road-world-spread .road-center-line, .road-world-spread .road-wordmark, .road-world-spread .road-interaction-sign { display: none; }
 .climb-stage { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(228px, 300px) minmax(0, 1fr); align-items: center; gap: clamp(14px, 2.4vw, 44px); width: min(1560px, 96vw); margin: 0 auto; padding: clamp(26px, 4vw, 64px) clamp(12px, 2vw, 30px); }
-.climb-side { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(8px, 1.1vw, 16px); align-content: center; }
-.climb-core { position: relative; z-index: 6; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 26px 20px; border: 1px solid rgba(55,69,79,.14); border-radius: 18px; background: rgba(250,243,225,.95); box-shadow: 0 18px 34px rgba(96,84,60,.14); text-align: center; }
+.climb-side { position: relative; height: clamp(420px, 43vw, 600px); }
+/* 卡片不再有自己的底版（底色/边框/阴影），背景换成整张济州岛图形。
+   用 cover 让岛铺满整块区域，只裁掉椭圆最左最右各约 9% 的尖角。 */
+.climb-core { position: relative; z-index: 6; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 30px 20px; text-align: center; }
+.climb-core::before { position: absolute; z-index: -1; inset: 0; content: ''; background: url('public/brand/jeju-island-plain.svg') center / cover no-repeat; pointer-events: none; }
 .climb-hint { margin: 0; min-height: 3.2em; line-height: 1.6; color: var(--muted); font-size: 13px; letter-spacing: .04em; }
 .climb-count { margin: 0; color: var(--blue-soft); font: 10px var(--mono); letter-spacing: .06em; }
 .climb-reveal-button { min-height: 42px; padding: 11px 18px; color: #fff; border: 1px solid rgba(55,69,79,.14); border-radius: 999px; background: var(--blue); box-shadow: 0 9px 20px rgba(59,51,40,.18); font-size: 12px; transition: transform .2s ease, background .2s ease; }
@@ -554,14 +543,14 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; transform: none; }
 .climb-core .road-comment-action { width: 100%; }
 .climb-decor { position: absolute; z-index: 5; top: 50%; left: 50%; width: 520px; height: 610px; transform: translate(-50%, -50%); pointer-events: none; opacity: 0; transition: opacity .5s ease; }
 .climb-decor.is-active { opacity: 1; }
-.climb-gallery-photo { display: block; width: 100%; min-width: 0; aspect-ratio: 4 / 3; padding: clamp(5px, .8vw, 10px); border: 1px solid rgba(55,69,79,.17); border-radius: 8px; background: #f7f0df; box-shadow: 0 12px 24px rgba(96,84,60,.13); cursor: zoom-in; transition: box-shadow .22s ease, transform .22s ease; }
+.climb-gallery-photo { position: absolute; display: block; width: var(--slot-w, 32%); min-width: 0; aspect-ratio: 4 / 3; padding: clamp(4px, .6vw, 8px); border: 1px solid rgba(55,69,79,.17); border-radius: 8px; background: #f7f0df; box-shadow: 0 12px 24px rgba(96,84,60,.13); cursor: zoom-in; transform: rotate(var(--slot-rot, 0deg)); transition: box-shadow .22s ease, transform .22s ease; }
 /* 预留的格子：占位但不可见，保证布局从头到尾不变 */
 .climb-gallery-photo.is-empty { visibility: hidden; }
 .climb-gallery-photo.is-entering { animation: climb-photo-fallback .42s cubic-bezier(.2,.8,.2,1) both; }
 @media (hover: hover) and (pointer: fine) {
-  .climb-gallery-photo:hover { z-index: 1; box-shadow: 0 18px 34px rgba(96,84,60,.23); transform: translateY(-3px) rotate(-.4deg); }
+  .climb-gallery-photo:hover { z-index: 1; box-shadow: 0 18px 34px rgba(96,84,60,.23); transform: rotate(var(--slot-rot, 0deg)) translateY(-4px) scale(1.03); }
 }
-.climb-gallery-photo:focus-visible { z-index: 1; box-shadow: 0 18px 34px rgba(96,84,60,.23); transform: translateY(-3px) rotate(-.4deg); }
+.climb-gallery-photo:focus-visible { z-index: 1; box-shadow: 0 18px 34px rgba(96,84,60,.23); transform: rotate(var(--slot-rot, 0deg)) translateY(-4px) scale(1.03); }
 .climb-gallery-photo img { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: 3px; background: #e9dfc7; }
 @keyframes climb-photo-fallback { 0% { opacity: 0; transform: translateY(14px) scale(.9); } 70% { opacity: 1; transform: translateY(-3px) scale(1.02); } 100% { opacity: 1; transform: none; } }
 @media (max-width: 1000px) {
@@ -572,6 +561,8 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; transform: none; }
   .climb-stage { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: 100%; padding: 30px 14px 38px; }
   .climb-core { grid-column: 1 / -1; order: -1; width: 100%; padding: 22px 16px; margin-bottom: 8px; }
   .climb-side { display: contents; }
+  /* 窄屏放不下散落布局，回到卡片下方的两栏常规流 */
+  .climb-gallery-photo { position: static; width: 100%; transform: none; }
   .climb-core .climb-progress-track { width: 120px; }
   .climb-decor { display: none; }
 }
@@ -593,7 +584,10 @@ body::after { position: fixed; inset: 0; z-index: 4; content: ''; pointer-events
 .mailbox-card.is-reaction-comment { background: rgba(250,236,205,.85); }
 
 /* ---- 结尾视频：最后一幕 ---- */
-.video-area { color: var(--ink); background: linear-gradient(180deg, var(--sky-deep) 0%, var(--sky) 100%); border-top: 1px solid var(--line); padding: 110px 0 120px; }
+.video-area { position: relative; color: var(--ink); background: linear-gradient(180deg, var(--sky-deep) 0%, var(--sky) 100%); border-top: 1px solid var(--line); padding: 110px 0 120px; }
+/* 开场页左上角的品牌标志（原来在第二页中央） */
+.video-brand { position: absolute; z-index: 20; top: 0; left: 0; padding: 24px 4.5vw; pointer-events: none; }
+.video-brand img { display: block; width: clamp(44px, 4.2vw, 60px); height: auto; filter: drop-shadow(0 10px 16px rgba(55,69,79,.15)); }
 .video-hero { min-height: 100svh; display: grid; place-items: center; padding: 78px 0 90px; }
 .video-hero-inner { width: min(1000px, 92vw); margin: 0 auto; text-align: center; }
 .video-hero .video-intro { margin-bottom: 28px; }

@@ -669,11 +669,10 @@ function renderStation(index) {
     const revealButton = make('button', 'climb-reveal-button', '点击铺开汉拿山照片');
     revealButton.type = 'button';
 
-    // 只铺开精选的那几张（roadData 里已挑好），保证全部落位后仍在一屏之内。
-    // 其余照片仍可从单张放大后左右翻看，也在页尾「打开完整相册」里。
-    const spreadImages = scene.images.length ? scene.images : scene.allImages;
+    // 汉拿山站的全部照片都铺在一屏里，散落摆放。
+    const spreadImages = scene.allImages.length ? scene.allImages : scene.images;
     const lightboxImages = scene.allImages.length ? scene.allImages : scene.images;
-    const revealBatchSize = 4;
+    const revealBatchSize = 6;
     const climbCount = make('p', 'climb-count', `已铺开 0 / ${spreadImages.length} 张`);
     const progressTrack = make('div', 'climb-progress-track');
     progressTrack.setAttribute('role', 'progressbar');
@@ -687,15 +686,54 @@ function renderStation(index) {
     stage.append(leftSide, core, rightSide, decor);
     world.append(stage);
 
-    // 先把所有格子按左右两列排好并占住位置，点击时只往格子里填内容。
+    // 散落布局：位置用固定种子生成，所以刷新后每张照片还是落在原处。
+    // 先按 3 列 × 4 行的格子站好，再加一点抖动和旋转，就不会看起来像表格。
+    const SLOT_COLS = 3;
+    const SLOT_ROWS = 4;
+    const SLOT_WIDTH = 32;
+    const slotRand = (() => {
+      let seed = 0x5f3a91c7;
+      return () => {
+        seed = (seed + 0x6d2b79f5) | 0;
+        let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    })();
+    const makeScatter = (count) => {
+      const cells = [];
+      for (let row = 0; row < SLOT_ROWS; row++) {
+        for (let col = 0; col < SLOT_COLS; col++) cells.push([col, row]);
+      }
+      for (let i = cells.length - 1; i > 0; i--) {
+        const j = Math.floor(slotRand() * (i + 1));
+        [cells[i], cells[j]] = [cells[j], cells[i]];
+      }
+      return cells.slice(0, count).map(([col, row]) => ({
+        x: col * (100 / SLOT_COLS) + (slotRand() - .5) * 5,
+        y: row * (100 / SLOT_ROWS) + (slotRand() - .5) * 4,
+        rot: (slotRand() - .5) * 13
+      }));
+    };
+    const perSide = Math.ceil(spreadImages.length / 2);
+    const scatter = [makeScatter(perSide), makeScatter(perSide)];
+
+    // 先把所有格子摆好并占住位置，点击时只往格子里填内容。
     // 布局从加载到结束都不变，所以中间卡片不会移动，也不会因为重排而卡顿。
     const slots = spreadImages.map((file, imageIndex) => {
       const slot = make('button', 'climb-gallery-photo is-empty');
       slot.type = 'button';
-      // order 只影响窄屏：那时左右两列会压成两栏排在卡片下方，
-      // 靠 order 保证照片仍然按挑选顺序 0、1、2… 排列。
+      const sideIndex = imageIndex % 2;
+      const place = scatter[sideIndex][Math.floor(imageIndex / 2)];
+      const rot = place.rot.toFixed(2);
+      slot.dataset.rot = rot;
+      slot.style.setProperty('--slot-w', `${SLOT_WIDTH}%`);
+      slot.style.setProperty('--slot-rot', `${rot}deg`);
+      slot.style.left = `${place.x.toFixed(2)}%`;
+      slot.style.top = `${place.y.toFixed(2)}%`;
+      // order 只影响窄屏：那时两栏会压到卡片下方，靠 order 保持照片顺序。
       slot.style.order = String(imageIndex);
-      (imageIndex % 2 === 0 ? leftSide : rightSide).append(slot);
+      (sideIndex === 0 ? leftSide : rightSide).append(slot);
       return slot;
     });
 
@@ -711,17 +749,19 @@ function renderStation(index) {
           const rect = el.getBoundingClientRect();
           const dx = originX - (rect.left + rect.width / 2);
           const dy = originY - (rect.top + rect.height / 2);
-          const tilt = side === 'left' ? -4 : 4;
+          const rot = Number(el.dataset.rot || 0);
+          const tilt = rot + (side === 'left' ? -5 : 5);
           if (typeof el.animate !== 'function') {
             el.classList.add('is-entering');
             return;
           }
           // 只动 opacity / transform：起点在卡片中心（被卡片挡住），
           // 于是照片看起来是从卡片左右两侧被推出来的。
+          // 关键帧里带上这张照片自己的旋转角，收尾时才能和静态位置无缝接上。
           const animation = el.animate([
-            { opacity: 0, transform: `translate(${dx}px, ${dy}px) scale(.88) rotate(${tilt}deg)` },
-            { opacity: 1, transform: 'translate(0, 0) scale(1.02) rotate(0deg)', offset: .7 },
-            { opacity: 1, transform: 'translate(0, 0) scale(1) rotate(0deg)' }
+            { opacity: 0, transform: `translate(${dx}px, ${dy}px) scale(.86) rotate(${tilt}deg)` },
+            { opacity: 1, transform: `translate(0, 0) scale(1.03) rotate(${rot}deg)`, offset: .7 },
+            { opacity: 1, transform: `translate(0, 0) scale(1) rotate(${rot}deg)` }
           ], { duration: 420, delay: index * 55, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' });
           animation.onfinish = () => animation.cancel();
         });
