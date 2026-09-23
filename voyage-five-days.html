@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#071225" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>从锦秋出发｜济州岛五日相册原型</title>
+  <link rel="stylesheet" href="voyage-five-days.css" />
+</head>
+<body class="voyage-body">
+  <header class="voyage-header">
+    <a class="voyage-brand" href="#voyage-top" aria-label="回到旅程开头">
+      <img src="public/brand/jinqiu-logo.png" alt="锦秋基金 Jinqiu Capital 官方 Logo" width="431" height="570" />
+      <span>锦秋基金<small>JEJU · ARCHIVE PROTOTYPE</small></span>
+    </a>
+    <div class="voyage-readout" aria-live="polite">
+      <span id="journey-state">准备出发</span>
+      <span class="readout-rule" aria-hidden="true"></span>
+      <span id="journey-count">00 / 05</span>
+    </div>
+  </header>
+
+  <main id="voyage-top">
+    <section class="voyage-track" aria-label="向下滚动，穿过五天的相册">
+      <div class="voyage-stage" id="voyage-stage">
+        <div class="starfield" aria-hidden="true"></div>
+        <div class="stage-glow" aria-hidden="true"></div>
+        <div class="flight-streaks" aria-hidden="true"></div>
+        <div class="stage-grid" aria-hidden="true"></div>
+
+        <div class="launch-scene" id="launch-scene">
+          <p class="launch-kicker">JINQIU / JEJU ARCHIVE</p>
+          <div class="launch-logo-wrap">
+            <span class="logo-orbit orbit-one" aria-hidden="true"></span>
+            <span class="logo-orbit orbit-two" aria-hidden="true"></span>
+            <img class="launch-logo" src="public/brand/jinqiu-logo.png" alt="" width="431" height="570" />
+          </div>
+          <h1>从锦秋出发</h1>
+          <p>向下滑，穿过一段被记住的旅程。</p>
+          <span class="launch-note">五日航线 · 滚动控制</span>
+        </div>
+
+        <div class="travel-copy" aria-live="polite">
+          <p id="travel-kicker">航线准备中</p>
+          <h2 id="travel-message">向下滑<br /><em>出发。</em></h2>
+        </div>
+
+        <div class="day-stack" aria-label="五天照片">
+          <article class="day-card" data-day="1" aria-hidden="true">
+            <div class="day-card-image">
+              <img src="public/images/scene-01.jpg" alt="草地上的户外团队挑战全景" />
+              <span class="photo-mark">01 / 05</span>
+            </div>
+            <div class="day-card-details">
+              <div class="day-card-top"><span>DAY 01</span><span>临时演示</span></div>
+              <p class="day-eyebrow">假定为第一天 · 现场记录 01</p>
+              <h2>户外挑战<br /><em>刚刚开始。</em></h2>
+              <p class="day-description">这一张先作为第一天的到达画面。真实版本会替换成确认过的当天活动与照片。</p>
+              <span class="day-time">17:35:30 · JEJU</span>
+            </div>
+          </article>
+
+          <article class="day-card" data-day="2" aria-hidden="true">
+            <div class="day-card-image">
+              <img src="public/images/scene-02.jpg" alt="队伍在草地上移动" />
+              <span class="photo-mark">02 / 05</span>
+            </div>
+            <div class="day-card-details">
+              <div class="day-card-top"><span>DAY 02</span><span>临时演示</span></div>
+              <p class="day-eyebrow">假定为第二天 · 现场记录 02</p>
+              <h2>队伍移动<br /><em>重新寻找位置。</em></h2>
+              <p class="day-description">继续向下，上一天的画面退到身后，第二张照片从远处靠近。</p>
+              <span class="day-time">17:36:23 · JEJU</span>
+            </div>
+          </article>
+
+          <article class="day-card" data-day="3" aria-hidden="true">
+            <div class="day-card-image">
+              <img src="public/images/scene-03.jpg" alt="草地上的团队追逐" />
+              <span class="photo-mark">03 / 05</span>
+            </div>
+            <div class="day-card-details">
+              <div class="day-card-top"><span>DAY 03</span><span>临时演示</span></div>
+              <p class="day-eyebrow">假定为第三天 · 现场记录 03</p>
+              <h2>场上追逐<br /><em>开始加速。</em></h2>
+              <p class="day-description">这里模拟一次更快的穿越。停下来时，照片仍然保持安静，方便看清现场。</p>
+              <span class="day-time">17:37:42 · JEJU</span>
+            </div>
+          </article>
+
+          <article class="day-card" data-day="4" aria-hidden="true">
+            <div class="day-card-image">
+              <img src="public/images/scene-04.jpg" alt="队员在草地上奔跑" />
+              <span class="photo-mark">04 / 05</span>
+            </div>
+            <div class="day-card-details">
+              <div class="day-card-top"><span>DAY 04</span><span>临时演示</span></div>
+              <p class="day-eyebrow">假定为第四天 · 现场记录 04</p>
+              <h2>笑着跑过<br /><em>镜头。</em></h2>
+              <p class="day-description">同样的活动素材先被拆成不同的日子，用来测试“到达—停留—离开”的节奏。</p>
+              <span class="day-time">17:37:55 · JEJU</span>
+            </div>
+          </article>
+
+          <article class="day-card" data-day="5" aria-hidden="true">
+            <div class="day-card-image">
+              <img src="public/images/scene-05.jpg" alt="三位队员在草地上移动" />
+              <span class="photo-mark">05 / 05</span>
+            </div>
+            <div class="day-card-details">
+              <div class="day-card-top"><span>DAY 05</span><span>临时演示</span></div>
+              <p class="day-eyebrow">假定为第五天 · 现场记录 05</p>
+              <h2>停在这里<br /><em>再回头看。</em></h2>
+              <p class="day-description">五日演示的最后一站。真实版本可以在这里接上合照、完整图库，或留言入口。</p>
+              <span class="day-time">17:38:18 · JEJU</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="stage-caption"><span id="stage-caption">向下滚动 · 进入第一天</span><span class="caption-dot" aria-hidden="true"></span></div>
+        <div class="stage-progress" aria-hidden="true"><span id="stage-progress-bar"></span></div>
+        <nav class="day-nav" aria-label="跳转到某一天">
+          <span>航线</span>
+          <button type="button" data-day-jump="0" aria-label="跳转到第一天">01</button>
+          <button type="button" data-day-jump="1" aria-label="跳转到第二天">02</button>
+          <button type="button" data-day-jump="2" aria-label="跳转到第三天">03</button>
+          <button type="button" data-day-jump="3" aria-label="跳转到第四天">04</button>
+          <button type="button" data-day-jump="4" aria-label="跳转到第五天">05</button>
+        </nav>
+        <div class="scroll-prompt" aria-hidden="true"><span>SCROLL TO TRAVEL</span><i></i></div>
+      </div>
+    </section>
+
+    <section class="arrival" id="arrival" aria-labelledby="arrival-title">
+      <div class="arrival-inner">
+        <p class="arrival-kicker">END OF DEMO / 05 FRAMES</p>
+        <h2 id="arrival-title">五天，先用五张照片<br /><em>演示一次到达。</em></h2>
+        <div class="arrival-copy">
+          <p>这里把目前的五张户外活动照片，暂时分别放进“第一天”到“第五天”，只是为了测试向下滚动时的穿越感。</p>
+          <p>它们实际来自同一段连续记录，并不代表真实的五天行程。确认骨架后，再替换成真实日期、活动和更多照片。</p>
+        </div>
+        <div class="arrival-grid">
+          <figure><img src="public/images/scene-01-thumb.jpg" alt="演示照片 01" /><figcaption>DAY 01</figcaption></figure>
+          <figure><img src="public/images/scene-02-thumb.jpg" alt="演示照片 02" /><figcaption>DAY 02</figcaption></figure>
+          <figure><img src="public/images/scene-03-thumb.jpg" alt="演示照片 03" /><figcaption>DAY 03</figcaption></figure>
+          <figure><img src="public/images/scene-04-thumb.jpg" alt="演示照片 04" /><figcaption>DAY 04</figcaption></figure>
+          <figure><img src="public/images/scene-05-thumb.jpg" alt="演示照片 05" /><figcaption>DAY 05</figcaption></figure>
+        </div>
+        <p class="comment-note">评论区暂不放进这一版动效测试，先确认“Logo → 每天 → 穿越 → 到达”的节奏。</p>
+        <a class="back-to-start" href="#voyage-top">重新出发 ↑</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="voyage-footer">
+    <img src="public/brand/jinqiu-logo.png" alt="锦秋基金 Jinqiu Capital" width="431" height="570" />
+    <span>锦秋基金 · 济州岛相册原型</span>
+    <span>当前为动效演示，不代表真实行程</span>
+  </footer>
+
+  <script src="voyage-five-days.js"></script>
+</body>
+</html>
