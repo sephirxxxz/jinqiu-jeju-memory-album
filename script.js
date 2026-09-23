@@ -81,7 +81,8 @@ const feedbackPeople = {
   'Ben': { displayName: '周琪', avatar: 'public/avatars/zhou-qi.png' },
   '乔众龙': { displayName: '乔众龙', avatar: 'public/avatars/qiao-zhenglong.png' },
   '乔正龙': { displayName: '乔正龙', avatar: 'public/avatars/qiao-zhenglong.png' },
-  '诺诺': { displayName: '诺诺', avatar: 'public/avatars/nuonuo.png' }
+  '诺诺': { displayName: '诺诺', avatar: 'public/avatars/nuonuo.png' },
+  '肖杨': { displayName: '肖杨', avatar: 'public/avatars/xiao-yang.png' }
 };
 
 function getFeedbackPerson(name = '') {
