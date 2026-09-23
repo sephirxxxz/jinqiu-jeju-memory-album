@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 200" width="360" height="200">
+  <!-- 去掉了 한라산 / 제주도 两个标签：它现在只用作汉拿山小方块的背景，
+       那两个标签会正好压在卡片文字上，两边都看不清。 -->
   <style>
     .island-stroke { fill: rgba(180,222,210,.22); stroke: rgba(58,132,124,.55); stroke-width: 3; stroke-linejoin: round; }
     .island-bump { fill: rgba(180,222,210,.28); stroke: rgba(58,132,124,.45); stroke-width: 2; }
     .island-berry { fill: #f4a04f; }
     .island-bird { fill: none; stroke: rgba(58,132,124,.7); stroke-width: 2.5; stroke-linecap: round; }
-    .island-text { fill: rgba(41,102,105,.62); font: 600 21px 'PingFang SC', 'Microsoft YaHei', sans-serif; letter-spacing: .12em; }
     .volcano-body { fill: rgba(109,148,128,.5); stroke: rgba(58,132,124,.5); stroke-width: 2; stroke-linejoin: round; }
     .volcano-crater { fill: #d9a06b; stroke: rgba(112,86,52,.4); stroke-width: 1.5; }
     .volcano-plume { fill: none; stroke: rgba(255,255,255,.75); stroke-width: 3; stroke-linecap: round; }
     .island-peak-dot { fill: #e98a5f; }
-    .island-volcano-label { fill: rgba(112,86,52,.72); font: 600 12px 'PingFang SC', 'Microsoft YaHei', sans-serif; letter-spacing: .08em; }
     .island-volcano { transform: translateY(10px); }
   </style>
   <path class="island-stroke" d="M 34 118 C 30 168 118 190 214 177 C 306 165 342 120 318 76 C 300 30 224 14 148 24 C 76 34 40 70 34 118 Z" />
@@ -23,7 +23,5 @@
     <path class="volcano-crater" d="M 162 76 L 174 76 L 172 81 L 164 81 Z" />
     <path class="volcano-plume" d="M 168 62 C 163 54 173 48 168 40 C 164 34 173 28 170 22" />
   </g>
-  <text class="island-volcano-label" x="188" y="96">한라산</text>
   <circle class="island-peak-dot" cx="168" cy="66" r="3" />
-  <text class="island-text" x="116" y="132" text-anchor="middle">제주도</text>
 </svg>

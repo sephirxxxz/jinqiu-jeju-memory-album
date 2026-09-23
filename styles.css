@@ -37,12 +37,6 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
 .route-background-line::after { position: absolute; left: 7vw; right: 7vw; top: 52%; height: 1px; content: ''; background: linear-gradient(90deg, transparent, rgba(55,69,79,.18), transparent); }
 
 .route-kicker { margin: 0 0 20px; color: var(--blue); font: 10px var(--mono); letter-spacing: .16em; }
-.route-launch { position: absolute; z-index: 5; top: 50%; left: 50%; display: flex; flex-direction: column; align-items: center; width: min(88vw, 600px); text-align: center; pointer-events: none; transform: translate(-50%, -50%); transform-origin: center; }
-.route-launch h1 { margin: 0 0 17px; font: 500 clamp(30px, 4.2vw, 52px)/1.25 var(--display); letter-spacing: -.02em; }
-.launch-cn { display: block; }
-.launch-en { display: block; margin-top: 9px; color: var(--blue); font: 700 clamp(15px, 2vw, 24px)/1.2 Lato, sans-serif; letter-spacing: .2em; }
-.route-theme { margin: 0; }
-.route-theme strong { color: var(--blue); font: 900 clamp(25px, 3vw, 40px)/1 Lato, sans-serif; letter-spacing: .13em; }
 
 .activity-panel, .activity-transition { position: absolute; inset: 0; opacity: 0; pointer-events: none; transform: translate3d(0, 18px, 0); transform-style: preserve-3d; backface-visibility: hidden; transition: opacity .18s linear, transform .18s linear; will-change: transform, opacity; }
 .activity-panel { z-index: 3; padding: 10vh 5.8vw 6vh; }
@@ -186,8 +180,6 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
 .route-footer > span { color: rgba(233,221,192,.7); }
 
 @media (max-width: 800px) {
-  .route-launch h1 { margin-bottom: 13px; font-size: 43px; }
-  .route-theme strong { font-size: 27px; }
   .route-stage { min-height: 560px; }
   .activity-panel { padding: 105px 17px 50px; }
   .road-heading { display: block; width: auto; margin: 0 0 8px; }
@@ -252,7 +244,7 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
   html, .activity-gallery { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
   .route-stage { perspective: none; }
-  .activity-panel, .activity-transition, .route-launch, .road-heading, .road-world, .road-photo, .road-prop { transform: none !important; }
+  .activity-panel, .activity-transition, .road-heading, .road-world, .road-photo, .road-prop { transform: none !important; }
   .road-wordmark { transform: translate(-50%, -50%) !important; }
   .road-surface, .road-center-line, .road-interaction-sign { transform: translateX(-50%) !important; }
   .activity-transition::before, .activity-transition::after { display: none; }
@@ -261,14 +253,7 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
 /* Continuous content walkway: each station now grows with its complete feedback. */
 .route-track { height: auto !important; background: var(--sky); }
 .route-stage { position: relative; top: auto; height: auto; min-height: 0; overflow: visible; perspective: 1400px; }
-.route-launch { position: relative; top: auto; left: auto; min-height: 100svh; margin: 0 auto; padding: 120px 20px 90px; transform: none !important; }
-.island-bg { position: absolute; top: calc(46% + 100px); left: 50%; width: min(520px, 78vw); transform: translate(-50%, -46%); pointer-events: none; }
-/* 济州岛的颜色样式现在放在 public/brand/jeju-island.svg 里，
-   这样第二页和汉拿山小方块共用同一份，不会出现两个副本以后改漏。 */
-.island-shape { display: block; width: 100%; height: auto; }
-.island-road { position: absolute; left: 50%; bottom: 0; width: 2px; height: 130px; background: linear-gradient(180deg, rgba(185,122,78,.38), rgba(185,122,78,.08)); transform: translateX(-50%) scaleY(0); transform-origin: top; box-shadow: 0 0 12px rgba(185,122,78,.25); }
-.road-fade .island-bg { opacity: 0; transform: translate(-50%, calc(-46% + 60px)) scale(.9); }
-.road-fade .island-road { transform: translateX(-50%) scaleY(1); }
+/* 第二页（开场页）已删除；济州岛图形现在只用作汉拿山小方块的背景 */
 .activity-panel { position: relative; inset: auto; z-index: 3; padding: 0; opacity: 1 !important; pointer-events: auto !important; transform: none !important; }
 .activity-transition, .stage-progress { display: none !important; }
 .activity-station { position: relative; width: min(1280px, 92vw); margin: 0 auto; padding: 110px 0 78px; transform-style: preserve-3d; }
@@ -341,7 +326,6 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
 .prop-backpack { right: 37%; bottom: 6%; width: 35px; height: 39px; border-radius: 45% 45% 25% 25%; background: linear-gradient(145deg, #d17a52, #8e574a); box-shadow: 7px 11px 15px rgba(86,61,55,.2); transform: translateZ(115px) rotateZ(5deg); }
 .prop-backpack::after { position: absolute; left: 8px; right: 8px; top: 13px; height: 4px; content: ''; border-radius: 3px; background: #f0c281; }
 @media (max-width: 800px) {
-  .route-launch { min-height: 100svh; padding: 96px 20px 70px; }
   .activity-station { width: 100%; padding: 76px 17px 50px; }
   .road-world { height: min(58svh, 470px); }
   .station-echo { width: calc(100% - 20px); margin-top: 58px; padding: 31px 20px 34px; }
@@ -428,7 +412,6 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; transform: none; }
 .road-photo:active img { transform: scale(.99); filter: brightness(.97); }
 .road-interaction-sign:hover .road-stop-face { animation: sign-wiggle .5s ease; }
 @keyframes sign-wiggle { 0%,100% { transform: rotateZ(-3deg) translateZ(14px); } 25% { transform: rotateZ(-6deg) translateZ(14px); } 60% { transform: rotateZ(0deg) translateZ(14px); } }
-.island-bg, .island-road { transition: opacity .7s ease, transform .7s ease; }
 @media (prefers-reduced-motion: reduce) {
   html.js-reveal .activity-station > .road-heading,
   html.js-reveal .activity-station > .road-world,
@@ -436,7 +419,6 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; transform: none; }
   html.js-reveal .highlight-card { opacity: 1; transform: none; transition: none; }
 }
 @media (max-width: 800px) {
-  .island-bg { width: 64vw; }
   .reaction-comment-form { grid-template-columns: 1fr; }
   .kr-title { margin-top: 8px; font-size: 10px; }
   .kr-tag { display: none; }
@@ -526,12 +508,12 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; transform: none; }
 /* ---- 汉拿山：照片从中间文字向左右两侧铺开 ---- */
 .road-world.road-world-spread { width: 100vw; max-width: none; height: auto; margin-left: calc(50% - 50vw); margin-right: 0; }
 .road-world-spread .road-surface, .road-world-spread .road-center-line, .road-world-spread .road-wordmark, .road-world-spread .road-interaction-sign { display: none; }
-.climb-stage { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(228px, 300px) minmax(0, 1fr); align-items: center; gap: clamp(14px, 2.4vw, 44px); width: min(1560px, 96vw); margin: 0 auto; padding: clamp(26px, 4vw, 64px) clamp(12px, 2vw, 30px); }
+.climb-stage { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 360px) minmax(0, 1fr); align-items: center; gap: clamp(14px, 2.4vw, 44px); width: min(1560px, 96vw); margin: 0 auto; padding: clamp(26px, 4vw, 64px) clamp(12px, 2vw, 30px); }
 .climb-side { position: relative; height: clamp(420px, 43vw, 600px); }
 /* 卡片不再有自己的底版（底色/边框/阴影），背景换成整张济州岛图形。
-   用 cover 让岛铺满整块区域，只裁掉椭圆最左最右各约 9% 的尖角。 */
+   用 contain 保证岛是完整的，不被裁掉。 */
 .climb-core { position: relative; z-index: 6; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 30px 20px; text-align: center; }
-.climb-core::before { position: absolute; z-index: -1; inset: 0; content: ''; background: url('public/brand/jeju-island-plain.svg') center / cover no-repeat; pointer-events: none; }
+.climb-core::before { position: absolute; z-index: -1; inset: 0; content: ''; background: url('public/brand/jeju-island.svg') center / contain no-repeat; pointer-events: none; }
 .climb-hint { margin: 0; min-height: 3.2em; line-height: 1.6; color: var(--muted); font-size: 13px; letter-spacing: .04em; }
 .climb-count { margin: 0; color: var(--blue-soft); font: 10px var(--mono); letter-spacing: .06em; }
 .climb-reveal-button { min-height: 42px; padding: 11px 18px; color: #fff; border: 1px solid rgba(55,69,79,.14); border-radius: 999px; background: var(--blue); box-shadow: 0 9px 20px rgba(59,51,40,.18); font-size: 12px; transition: transform .2s ease, background .2s ease; }
@@ -554,7 +536,7 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; transform: none; }
 .climb-gallery-photo img { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: 3px; background: #e9dfc7; }
 @keyframes climb-photo-fallback { 0% { opacity: 0; transform: translateY(14px) scale(.9); } 70% { opacity: 1; transform: translateY(-3px) scale(1.02); } 100% { opacity: 1; transform: none; } }
 @media (max-width: 1000px) {
-  .climb-stage { grid-template-columns: minmax(0, 1fr) minmax(200px, 260px) minmax(0, 1fr); gap: 16px; }
+  .climb-stage { grid-template-columns: minmax(0, 1fr) minmax(230px, 300px) minmax(0, 1fr); gap: 16px; }
 }
 @media (max-width: 800px) {
   .variety-grid { grid-template-columns: 1fr; gap: 14px; }
@@ -584,7 +566,8 @@ body::after { position: fixed; inset: 0; z-index: 4; content: ''; pointer-events
 .mailbox-card.is-reaction-comment { background: rgba(250,236,205,.85); }
 
 /* ---- 结尾视频：最后一幕 ---- */
-.video-area { position: relative; color: var(--ink); background: linear-gradient(180deg, var(--sky-deep) 0%, var(--sky) 100%); border-top: 1px solid var(--line); padding: 110px 0 120px; }
+/* 底部收在 #faf5e8，和路道天空层的顶部同色，两页接缝处不会有色带 */
+.video-area { position: relative; color: var(--ink); background: linear-gradient(180deg, var(--sky-deep) 0%, #faf5e8 100%); border-top: 1px solid var(--line); padding: 110px 0 120px; }
 /* 开场页左上角的品牌标志（原来在第二页中央） */
 .video-brand { position: absolute; z-index: 20; top: 0; left: 0; padding: 24px 4.5vw; pointer-events: none; }
 .video-brand img { display: block; width: clamp(44px, 4.2vw, 60px); height: auto; filter: drop-shadow(0 10px 16px rgba(55,69,79,.15)); }

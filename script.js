@@ -3,7 +3,6 @@
 const scenes = roadData;
 const activitiesById = new Map(activityData.map((activity) => [activity.id, activity]));
 const stage = document.querySelector('#route-stage');
-const launch = document.querySelector('#route-launch');
 const roadPanel = document.querySelector('#activity-panel');
 const transitionPanel = document.querySelector('#activity-transition');
 const progressBar = document.querySelector('#stage-progress-bar');
@@ -897,16 +896,6 @@ function renderAllScenes() {
 }
 
 renderAllScenes();
-
-/* ---- 首页岛屿 → 道路过渡 ---- */
-const launchSection = document.querySelector('#route-launch');
-function updateIslandScroll() {
-  if (reducedMotion.matches || !launchSection) return;
-  const rect = launchSection.getBoundingClientRect();
-  const out = -rect.top / launchSection.offsetHeight;
-  launchSection.classList.toggle('road-fade', out > 0.22);
-}
-window.addEventListener('scroll', updateIslandScroll, { passive: true });
 
 /* ---- 内容揭示（scroll reveal）---- */
 document.documentElement.classList.add('js-reveal');
