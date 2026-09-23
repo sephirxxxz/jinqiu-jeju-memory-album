@@ -58,6 +58,10 @@ const MAX_COMMENTS = 200;
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 const ease = (value) => value * value * (3 - 2 * value);
 const imageUrl = (file) => encodeURI(`${imageRoot}${file}`);
+// 网格 / 照片墙里的图都用 720px 缩略图；只有单张放大查看才加载原图。
+// 缩略图文件名和原图一致，只换目录和扩展名（统一存为 JPEG）。
+const thumbRoot = 'public/thumbs/';
+const thumbUrl = (file) => encodeURI(`${thumbRoot}${file.replace(/\.[^.]+$/, '')}.jpg`);
 const make = (tag, className, text) => {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -377,7 +381,7 @@ function renderPhotoGrid(title, description, images, selectedIndex = 0, kicker =
     button.type = 'button';
     button.setAttribute('aria-label', `${title}照片`);
     const image = make('img');
-    image.src = imageUrl(file);
+    image.src = thumbUrl(file);
     image.alt = `${title}照片`;
     image.loading = index < 4 ? 'eager' : 'lazy';
     image.decoding = 'async';
@@ -556,7 +560,7 @@ function renderVarietyCard(scene, data, cardIndex) {
   photoButton.type = 'button';
   photoButton.setAttribute('aria-label', `打开${scene.title}完整相册`);
   const photoImage = make('img');
-  photoImage.src = imageUrl(data.image);
+  photoImage.src = thumbUrl(data.image);
   photoImage.alt = `${scene.title}现场照片`;
   photoImage.loading = 'lazy';
   photoImage.decoding = 'async';
@@ -604,7 +608,7 @@ function renderStation(index) {
     thumb.type = 'button';
     thumb.setAttribute('aria-label', `预览${scene.title}第 ${i + 1} 张`);
     const thumbImg = make('img');
-    thumbImg.src = imageUrl(file);
+    thumbImg.src = thumbUrl(file);
     thumbImg.alt = '';
     thumbImg.loading = 'lazy';
     thumbImg.decoding = 'async';
@@ -733,7 +737,7 @@ function renderStation(index) {
         const imageIndex = startIndex + offset;
         const slot = slots[imageIndex];
         const img = make('img');
-        img.src = imageUrl(file);
+        img.src = thumbUrl(file);
         img.alt = `汉拿山现场照片 ${imageIndex + 1}`;
         img.decoding = 'async';
         slot.append(img);
@@ -778,7 +782,7 @@ function renderStation(index) {
       button.type = 'button';
       button.setAttribute('aria-label', `打开${scene.title}完整相册`);
       const image = make('img');
-      image.src = imageUrl(file);
+      image.src = thumbUrl(file);
       image.alt = `${scene.title}现场照片`;
       image.loading = index === 0 ? 'eager' : 'lazy';
       image.decoding = 'async';
