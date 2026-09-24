@@ -5,13 +5,10 @@
 const sceneDetails = {
   "meeting-road": {
     titleClass: "scene-title-meeting",
-    featureLabel: "제주 메모 · 共创桌",
-    featureText: "把讨论留下来，也把彼此的理解留下来。",
+    echoTitle: "聊完之后，大家有了这些想法",
     signFace: "메모",
     signClass: "sign-note",
     props: ["prop-pencil", "prop-note", "prop-cup", "prop-nameplate"],
-    krTitle: "환영해요",
-    krTags: ["메모", "함께"],
     highlights: [
       {
         name: "石头",
@@ -52,13 +49,10 @@ const sceneDetails = {
   },
   "beach-road": {
     titleClass: "scene-title-beach",
-    featureLabel: "바다 · TEAM PLAY",
-    featureText: "海风、球场和一群想赢的队友。",
+    echoTitle: "原来你还有这一面",
     signFace: "정지",
     signClass: "sign-stop",
     props: ["prop-ball", "prop-flag", "prop-shell", "prop-umbrella", "prop-footprint"],
-    krTitle: "바다",
-    krTags: ["파도", "화이팅"],
     variety: {
       round: "第 1 回 · 全员高能",
       badge: "🔥",
@@ -105,13 +99,10 @@ const sceneDetails = {
   },
   "maze-road": {
     titleClass: "scene-title-maze",
-    featureLabel: "돌담길 · FIND THE WAY",
-    featureText: "济州石墙旁，体力、智力和信任一起找路。",
+    echoTitle: "一起找路，一起想办法",
     signFace: "길찾기",
     signClass: "sign-maze",
     props: ["prop-hedge", "prop-dol", "prop-clue", "prop-flower", "prop-boulder"],
-    krTitle: "돌담",
-    krTags: ["길", "돌담길"],
     variety: {
       round: "第 2 回 · 名场面预警",
       badge: "🧭",
@@ -148,13 +139,10 @@ const sceneDetails = {
   },
   "tag-road": {
     titleClass: "scene-title-tag",
-    featureLabel: "이름표 · READY",
-    featureText: "撕下名牌，也撕下办公室里的固定印象。",
+    echoTitle: "玩的时候，大家都认真了",
     signFace: "준비",
     signClass: "sign-tag",
     props: ["prop-ribbon", "prop-badge", "prop-whistle", "prop-torn", "prop-handprint"],
-    krTitle: "이름표",
-    krTags: ["화이팅", "준비"],
     variety: {
       round: "第 3 回 · 笑不活了",
       badge: "💥",
@@ -201,13 +189,10 @@ const sceneDetails = {
   },
   "food-road": {
     titleClass: "scene-title-food",
-    featureLabel: "제주 식탁 · 맛있게",
-    featureText: "烤肉、海鲜和当地市场般的围桌时间。",
+    echoTitle: "饭桌上，聊得更近了",
     signFace: "맛있게",
     signClass: "sign-food",
     props: ["prop-tangerine", "prop-grill", "prop-seafood", "prop-glass", "prop-chopsticks"],
-    krTitle: "건배",
-    krTags: ["맛있게", "한잔"],
     highlights: [
       {
         name: "石头",
@@ -238,14 +223,10 @@ const sceneDetails = {
   },
   "mountain-road": {
     titleClass: "scene-title-mountain",
-    featureLabel: "한라산 · 산길",
-    featureText: "沿汉拿山的小路慢下来，给呼吸留一点空间。",
+    echoTitle: "爬完这座山，想说点什么",
     signFace: "산길",
     signClass: "sign-mountain",
     props: ["prop-peak", "prop-backpack", "prop-flag-mountain", "prop-stick", "prop-cloud"],
-    krTitle: "한라산",
-    krTags: ["정상", "산길"],
-    fullWidthGallery: true,
     highlights: [
       {
         name: "乔众龙",

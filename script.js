@@ -4,35 +4,24 @@ const scenes = roadData;
 const activitiesById = new Map(activityData.map((activity) => [activity.id, activity]));
 const stage = document.querySelector('#route-stage');
 const roadPanel = document.querySelector('#activity-panel');
-const transitionPanel = document.querySelector('#activity-transition');
-const progressBar = document.querySelector('#stage-progress-bar');
-const transitionKicker = document.querySelector('#transition-kicker');
-const transitionTitle = document.querySelector('#transition-title');
-const transitionCopy = document.querySelector('#transition-copy');
 const photoDialog = document.querySelector('#photo-dialog');
 const photoDialogClose = document.querySelector('#photo-dialog-close');
-const photoDialogKicker = document.querySelector('#photo-dialog-kicker');
 const photoDialogTitle = document.querySelector('#photo-dialog-title');
-const photoDialogDescription = document.querySelector('#photo-dialog-description');
 const photoDialogGrid = document.querySelector('#photo-dialog-grid');
 const photoLightbox = document.querySelector('#photo-lightbox');
 const photoLightboxClose = document.querySelector('#photo-lightbox-close');
 const photoLightboxExit = document.querySelector('#photo-lightbox-exit');
 const photoLightboxTitle = document.querySelector('#photo-lightbox-title');
 const photoLightboxImage = document.querySelector('#photo-lightbox-image');
-const photoLightboxCaption = document.querySelector('#photo-lightbox-caption');
 const photoLightboxCount = document.querySelector('#photo-lightbox-count');
 const photoLightboxPrev = document.querySelector('#photo-lightbox-prev');
 const photoLightboxNext = document.querySelector('#photo-lightbox-next');
-const openArchiveButton = document.querySelector('#open-archive');
 const commentDialog = document.querySelector('#comment-dialog');
 const commentDialogClose = document.querySelector('#comment-dialog-close');
-const commentDialogKicker = document.querySelector('#comment-dialog-kicker');
 const commentDialogTitle = document.querySelector('#comment-dialog-title');
 const commentSourceText = document.querySelector('#comment-source-text');
 const commentSourceName = document.querySelector('#comment-source-name');
 const commentForm = document.querySelector('#comment-form');
-const commentScope = document.querySelector('#comment-scope');
 const commentName = document.querySelector('#comment-name');
 const commentText = document.querySelector('#comment-text');
 const commentCount = document.querySelector('#comment-count');
@@ -356,11 +345,9 @@ function openSceneComments(sceneIndex, trigger) {
   const source = getActivity(scene.commentId);
   commentSceneIndex = sceneIndex;
   lastCommentTrigger = trigger || null;
-  commentDialogKicker.textContent = '真心话时刻';
-  commentDialogTitle.textContent = `给${scene.title}的一句真心话`;
+  commentDialogTitle.textContent = '欢迎JQer留下你的评论';
   commentSourceText.textContent = source.feedback.quote;
-  commentSourceName.textContent = `— ${displayFeedbackName(source.feedback.source)} · 活动反馈文档`;
-  commentScope.textContent = `正在写给：${scene.title}`;
+  commentSourceName.textContent = `— ${displayFeedbackName(source.feedback.source)}`;
   commentForm.reset();
   updateCommentCount();
   setCommentStatus(commentStorageUsable ? '' : '本机存储不可用；这次留言只会暂时留在当前页面。', !commentStorageUsable);
@@ -369,11 +356,9 @@ function openSceneComments(sceneIndex, trigger) {
   window.requestAnimationFrame(() => commentName.focus({ preventScroll: true }));
 }
 
-function renderPhotoGrid(title, description, images, selectedIndex = 0, kicker = 'SCENE ARCHIVE') {
+function renderPhotoGrid(title, images, selectedIndex = 0) {
   photoDialogScene = null;
-  photoDialogKicker.textContent = kicker;
   photoDialogTitle.textContent = title;
-  photoDialogDescription.textContent = description;
   photoDialogGrid.replaceChildren();
   images.forEach((file, index) => {
     const button = make('button', 'archive-photo');
@@ -402,7 +387,6 @@ function updatePhotoLightbox() {
   if (!file || !photoLightboxImage) return;
   photoLightboxImage.src = imageUrl(file);
   photoLightboxImage.alt = `${photoLightboxTitle.textContent}第 ${photoLightboxIndex + 1} 张照片`;
-  photoLightboxCaption.textContent = `${photoLightboxTitle.textContent} · 第 ${photoLightboxIndex + 1} / ${photoLightboxImages.length} 张`;
   photoLightboxCount.textContent = `${photoLightboxIndex + 1} / ${photoLightboxImages.length}`;
   photoLightboxPrev.disabled = photoLightboxIndex === 0;
   photoLightboxNext.disabled = photoLightboxIndex === photoLightboxImages.length - 1;
@@ -433,17 +417,11 @@ function openSceneArchive(sceneIndex, selectedIndex = 0, trigger) {
   if (!scene) return;
   lastPhotoTrigger = trigger || null;
   photoDialogScene = scene;
-  renderPhotoGrid(scene.title, `${scene.subtitle}。${scene.description}`, scene.allImages, selectedIndex, 'SCENE ARCHIVE');
+  renderPhotoGrid(scene.title, scene.allImages, selectedIndex);
   window.requestAnimationFrame(() => {
     const selected = photoDialogGrid.querySelector('.archive-photo.is-focus');
     selected?.scrollIntoView({ block: 'center', behavior: reducedMotion.matches ? 'auto' : 'smooth' });
   });
-}
-
-function openFullArchive() {
-  lastPhotoTrigger = openArchiveButton;
-  const images = activityData.flatMap((activity) => activity.images);
-  renderPhotoGrid('完整相册', '按活动分区保留的全部现场图片。', images, 0, 'FULL ARCHIVE');
 }
 
 commentText.addEventListener('input', updateCommentCount);
@@ -470,7 +448,7 @@ commentForm.addEventListener('submit', (event) => {
   commentText.value = '';
   updateCommentCount();
   renderComments();
-  setCommentStatus(saved ? '真心话小纸条已启程，正漂向页尾的锦秋漂流瓶。' : '已放入本次页面；本机存储不可用，刷新后这封信不会保留。', !saved);
+  setCommentStatus(saved ? '留言已放进页尾的信箱。' : '已放入本次页面；本机存储不可用，刷新后这封信不会保留。', !saved);
   sendMailToBox(comments[comments.length - 1].id);
   commentText.focus({ preventScroll: true });
 });
@@ -513,8 +491,6 @@ commentDialog.addEventListener('click', (event) => {
 commentDialog.addEventListener('close', () => {
   if (lastCommentTrigger?.isConnected) lastCommentTrigger.focus({ preventScroll: true });
 });
-openArchiveButton.addEventListener('click', openFullArchive);
-
 function buildReactionBar(key) {
   const bar = make('div', 'reaction-bar');
   const likeButton = make('button', 'reaction-like', `赞 ${getReactionLikeCount(key)}`);
@@ -595,11 +571,6 @@ function renderStation(index) {
   const sceneHeading = make('h1', `scene-title ${details.titleClass || ''}`, scene.title);
   sceneHeading.id = `heading-${scene.id}`;
   headingMain.append(sceneHeading);
-  if (details.krTitle) {
-    const krTitle = make('span', 'kr-title', details.krTitle);
-    krTitle.setAttribute('aria-hidden', 'true');
-    headingMain.append(krTitle);
-  }
   const aside = make('div', 'road-aside road-thumbs');
   const thumbLimit = 12;
   scene.allImages.slice(0, thumbLimit).forEach((file, i) => {
@@ -645,175 +616,10 @@ function renderStation(index) {
     world.append(prop);
   };
   (details.props || ['prop-tangerine', 'prop-stone']).forEach(appendProp);
-  (details.krTags || []).forEach((tag, tagIndex) => {
-    const krTag = make('span', `kr-tag kr-tag-${tagIndex + 1}`, tag);
-    krTag.setAttribute('aria-hidden', 'true');
-    world.append(krTag);
-  });
 
-  const isMountainGallery = !!details.fullWidthGallery;
   const isVariety = !!details.variety;
   world.append(surface, centerLine, wordmark, interactionSign);
-  if (isMountainGallery) {
-    world.classList.add('road-world-spread');
-    const decor = make('div', 'climb-decor');
-    world.querySelectorAll('.road-prop, .kr-tag').forEach((node) => decor.append(node));
-    const stage = make('div', 'climb-stage');
-    const leftSide = make('div', 'climb-side climb-side-left');
-    const rightSide = make('div', 'climb-side climb-side-right');
-    leftSide.setAttribute('aria-live', 'polite');
-    rightSide.setAttribute('aria-live', 'polite');
-    const core = make('div', 'climb-core');
-    const climbHint = make('p', 'climb-hint', '点击任意处，让照片从卡片左右两边铺开');
-    const revealButton = make('button', 'climb-reveal-button', '点击铺开汉拿山照片');
-    revealButton.type = 'button';
-
-    // 汉拿山站的全部照片都铺在一屏里，散落摆放。
-    const spreadImages = scene.allImages.length ? scene.allImages : scene.images;
-    const lightboxImages = scene.allImages.length ? scene.allImages : scene.images;
-    const revealBatchSize = 6;
-    const climbCount = make('p', 'climb-count', `已铺开 0 / ${spreadImages.length} 张`);
-    const progressTrack = make('div', 'climb-progress-track');
-    progressTrack.setAttribute('role', 'progressbar');
-    progressTrack.setAttribute('aria-label', '汉拿山照片展开进度');
-    progressTrack.setAttribute('aria-valuemin', '0');
-    progressTrack.setAttribute('aria-valuemax', String(spreadImages.length));
-    progressTrack.setAttribute('aria-valuenow', '0');
-    const progressFill = make('span', 'climb-progress-fill');
-    progressTrack.append(progressFill);
-    core.append(climbHint, revealButton, climbCount, progressTrack, commentButton);
-    stage.append(leftSide, core, rightSide, decor);
-    world.append(stage);
-
-    // 散落布局：位置用固定种子生成，所以刷新后每张照片还是落在原处。
-    // 先按 3 列 × 4 行的格子站好，再加一点抖动和旋转，就不会看起来像表格。
-    const SLOT_COLS = 3;
-    const SLOT_ROWS = 4;
-    const SLOT_WIDTH = 32;
-    const slotRand = (() => {
-      let seed = 0x5f3a91c7;
-      return () => {
-        seed = (seed + 0x6d2b79f5) | 0;
-        let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-      };
-    })();
-    const makeScatter = (count) => {
-      const cells = [];
-      for (let row = 0; row < SLOT_ROWS; row++) {
-        for (let col = 0; col < SLOT_COLS; col++) cells.push([col, row]);
-      }
-      for (let i = cells.length - 1; i > 0; i--) {
-        const j = Math.floor(slotRand() * (i + 1));
-        [cells[i], cells[j]] = [cells[j], cells[i]];
-      }
-      return cells.slice(0, count).map(([col, row]) => ({
-        x: col * (100 / SLOT_COLS) + (slotRand() - .5) * 5,
-        y: row * (100 / SLOT_ROWS) + (slotRand() - .5) * 4,
-        rot: (slotRand() - .5) * 13
-      }));
-    };
-    const perSide = Math.ceil(spreadImages.length / 2);
-    const scatter = [makeScatter(perSide), makeScatter(perSide)];
-
-    // 先把所有格子摆好并占住位置，点击时只往格子里填内容。
-    // 布局从加载到结束都不变，所以中间卡片不会移动，也不会因为重排而卡顿。
-    const slots = spreadImages.map((file, imageIndex) => {
-      const slot = make('button', 'climb-gallery-photo is-empty');
-      slot.type = 'button';
-      const sideIndex = imageIndex % 2;
-      const place = scatter[sideIndex][Math.floor(imageIndex / 2)];
-      const rot = place.rot.toFixed(2);
-      slot.dataset.rot = rot;
-      slot.style.setProperty('--slot-w', `${SLOT_WIDTH}%`);
-      slot.style.setProperty('--slot-rot', `${rot}deg`);
-      slot.style.left = `${place.x.toFixed(2)}%`;
-      slot.style.top = `${place.y.toFixed(2)}%`;
-      // order 只影响窄屏：那时两栏会压到卡片下方，靠 order 保持照片顺序。
-      slot.style.order = String(imageIndex);
-      (sideIndex === 0 ? leftSide : rightSide).append(slot);
-      return slot;
-    });
-
-    let revealedCount = 0;
-    let spreadBusy = false;
-    const spreadFromCard = (entries) => {
-      if (reducedMotion.matches) return;
-      const card = core.getBoundingClientRect();
-      const originX = card.left + card.width / 2;
-      const originY = card.top + card.height / 2;
-      requestAnimationFrame(() => {
-        entries.forEach(({ el, side }, index) => {
-          const rect = el.getBoundingClientRect();
-          const dx = originX - (rect.left + rect.width / 2);
-          const dy = originY - (rect.top + rect.height / 2);
-          const rot = Number(el.dataset.rot || 0);
-          const tilt = rot + (side === 'left' ? -5 : 5);
-          if (typeof el.animate !== 'function') {
-            el.classList.add('is-entering');
-            return;
-          }
-          // 只动 opacity / transform：起点在卡片中心（被卡片挡住），
-          // 于是照片看起来是从卡片左右两侧被推出来的。
-          // 关键帧里带上这张照片自己的旋转角，收尾时才能和静态位置无缝接上。
-          const animation = el.animate([
-            { opacity: 0, transform: `translate(${dx}px, ${dy}px) scale(.86) rotate(${tilt}deg)` },
-            { opacity: 1, transform: `translate(0, 0) scale(1.03) rotate(${rot}deg)`, offset: .7 },
-            { opacity: 1, transform: `translate(0, 0) scale(1) rotate(${rot}deg)` }
-          ], { duration: 420, delay: index * 55, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' });
-          animation.onfinish = () => animation.cancel();
-        });
-      });
-    };
-    const revealNextBatch = async () => {
-      if (spreadBusy || revealedCount >= spreadImages.length) return;
-      spreadBusy = true;
-      decor.classList.add('is-active');
-      const startIndex = revealedCount;
-      const batch = spreadImages.slice(startIndex, startIndex + revealBatchSize);
-      const prepared = batch.map((file, offset) => {
-        const imageIndex = startIndex + offset;
-        const slot = slots[imageIndex];
-        const img = make('img');
-        img.src = thumbUrl(file);
-        img.alt = `汉拿山现场照片 ${imageIndex + 1}`;
-        img.decoding = 'async';
-        slot.append(img);
-        return { slot, img, imageIndex };
-      });
-      revealedCount = startIndex + prepared.length;
-      // 等图片解码完再入场，避免先看到一个空框再闪出图片。
-      await Promise.all(prepared.map(({ img }) => (typeof img.decode === 'function' ? img.decode().catch(() => {}) : Promise.resolve())));
-      const entries = prepared.map(({ slot, imageIndex }) => {
-        slot.classList.remove('is-empty');
-        slot.setAttribute('aria-label', `放大查看汉拿山第 ${imageIndex + 1} 张照片`);
-        slot.addEventListener('click', () => openPhotoLightbox(lightboxImages, imageIndex, scene.title));
-        return { el: slot, side: imageIndex % 2 === 0 ? 'left' : 'right' };
-      });
-      spreadFromCard(entries);
-      climbCount.textContent = `已铺开 ${revealedCount} / ${spreadImages.length} 张`;
-      progressTrack.setAttribute('aria-valuenow', String(revealedCount));
-      progressFill.style.transform = `scaleX(${(revealedCount / spreadImages.length).toFixed(3)})`;
-      if (revealedCount >= spreadImages.length) {
-        revealButton.textContent = '汉拿山照片已全部铺开';
-        revealButton.disabled = true;
-        const rest = Math.max(lightboxImages.length - spreadImages.length, 0);
-        climbHint.textContent = rest
-          ? `这 ${spreadImages.length} 张精选都在这里了；其余 ${rest} 张在页尾的完整相册里。`
-          : '全部照片都在这里了。';
-      } else {
-        const nextCount = Math.min(revealBatchSize, spreadImages.length - revealedCount);
-        revealButton.textContent = `继续铺开 · 再看 ${nextCount} 张`;
-      }
-      spreadBusy = false;
-    };
-    revealButton.addEventListener('click', revealNextBatch);
-    world.addEventListener('click', (event) => {
-      if (event.target.closest('button, a, input, textarea')) return;
-      revealNextBatch();
-    });
-  } else if (!isVariety) {
+  if (!isVariety) {
     const appendPhoto = (stack, imageIndex) => {
       const file = scene.images[imageIndex];
       if (!file) return;
@@ -839,16 +645,12 @@ function renderStation(index) {
   const echo = make('section', 'station-echo');
   echo.setAttribute('aria-labelledby', `echo-${scene.id}`);
   if (isVariety) {
-    echo.append(make('p', 'station-echo-kicker', `${details.variety.badge} ${details.variety.round} · 照片里的真心话`));
-    echo.append(make('h2', '', '每一张，都有一句现场点评'));
-    echo.append(make('p', 'station-echo-intro', `${details.featureText || ''} 照片和反馈合在一起看，不再分开。`));
+    echo.append(make('h2', '', details.echoTitle || '这一站的回答'));
     const grid = make('div', 'variety-grid');
     details.variety.cards.forEach((cardData, cardIndex) => grid.append(renderVarietyCard(scene, cardData, cardIndex)));
     echo.append(grid);
   } else {
-    echo.append(make('p', 'station-echo-kicker', '真心话时刻 · 这一站的回答'));
-    echo.append(make('h2', '', '这一站，大家说了什么？'));
-    echo.append(make('p', 'station-echo-intro', `${details.featureText || ''} 按对应环节归到这一站的回答。`));
+    echo.append(make('h2', '', details.echoTitle || '这一站的回答'));
     const source = getActivity(scene.commentId);
     const quote = make('blockquote', 'station-source-quote');
     const quoteCite = make('cite', 'station-source-cite');
@@ -868,9 +670,7 @@ function renderStation(index) {
 function renderSuggestionsSection() {
   const section = make('section', 'station-echo station-echo-final');
   section.id = 'station-suggestions';
-  section.append(make('p', 'station-echo-kicker', '活动回声 · 给下一次的建议'));
-  section.append(make('h2', '', '大家想对下一次团建说什么？'));
-  section.append(make('p', 'station-echo-intro', '关于形式建议、改进与对同事的新发现。'));
+  section.append(make('h2', '', '对下一次团建，大家还有这些想法'));
   section.append(renderVoiceFeedbackList(feedbackSuggestions, '建议'));
   return section;
 }
@@ -881,16 +681,6 @@ function renderAllScenes() {
   roadPanel.inert = false;
   scenes.forEach((scene, index) => {
     roadPanel.append(renderStation(index));
-    if (index < scenes.length - 1) {
-      const next = scenes[index + 1];
-      const separator = make('div', 'station-transition');
-      separator.append(
-        make('p', 'route-kicker', '继续沿路'),
-        make('h2', '', `走向${next.title}`),
-        make('p', '', '下一段记忆正在靠近。')
-      );
-      roadPanel.append(separator);
-    }
   });
   roadPanel.append(renderSuggestionsSection());
 }
@@ -930,7 +720,7 @@ if (reducedMotion.matches) {
   }
 }
 
-/* ---- 真心话时刻：小纸条投递 + 漂流瓶展开 ---- */
+/* ---- 真心话时刻：小纸条投递 + 信箱收集 ---- */
 const mailboxArea = document.querySelector('#mailbox-area');
 const mailboxList = document.querySelector('#mailbox-list');
 
@@ -947,7 +737,7 @@ function renderMailboxList() {
   mailboxList.replaceChildren();
   const all = getAllComments();
   if (!all.length) {
-    mailboxList.append(make('p', 'mailbox-empty', '漂流瓶还空着——等第一句真心话。'));
+    mailboxList.append(make('p', 'mailbox-empty', '信箱还空着，等第一句真心话。'));
     return;
   }
   const byActivity = new Map();
@@ -972,7 +762,7 @@ function renderMailboxList() {
     group.append(rows);
     mailboxList.append(group);
   });
-  // 评论也统一收进漂流瓶
+  // 评论也统一收进信箱
   const reactionComments = Object.entries(reactions).flatMap(([key, entry]) =>
     entry.comments.map((comment) => ({ key, ...comment }))).sort((a, b) => b.createdAt - a.createdAt);
   if (reactionComments.length) {
@@ -991,7 +781,7 @@ function renderMailboxList() {
   }
 }
 
-function animateBottleArrival() {
+function animateMailboxArrival() {
   if (reducedMotion.matches) return;
   mailboxArea.classList.remove('has-arrival');
   void mailboxArea.offsetWidth;
@@ -1003,7 +793,7 @@ function sendMailToBox(newCommentId) {
   if (!mailboxArea) return;
   if (commentDialog.open) commentDialog.close();
   if (!reducedMotion.matches && !document.hidden) {
-    const letter = make('div', 'bottle-letter');
+    const letter = make('div', 'mail-letter');
     letter.setAttribute('aria-hidden', 'true');
     document.body.append(letter);
     const startX = window.innerWidth / 2;
@@ -1018,14 +808,14 @@ function sendMailToBox(newCommentId) {
     mailboxArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
-        const target = document.querySelector('#message-bottle').getBoundingClientRect();
+        const target = document.querySelector('#mailbox-postbox').getBoundingClientRect();
         const dx = (target.left + target.width / 2) - (startX + 19);
         const dy = (target.top + target.height / 2) - (startY + 11);
         letter.style.transform = `translate(${dx}px, ${dy}px) rotate(16deg) scale(.18)`;
         setTimeout(() => {
           letter.remove();
           mailboxArea.classList.add('is-open');
-          animateBottleArrival();
+          animateMailboxArrival();
           renderMailboxList();
           const fresh = mailboxArea.querySelector(`.mailbox-card[data-id="${CSS.escape(newCommentId)}"]`);
           if (fresh) {
@@ -1047,7 +837,6 @@ renderMailboxList();
 /* ---- 主题曲：视频结束后自动播放 ---- */
 const finalVideo = document.querySelector('#final-video');
 const videoPlayButton = document.querySelector('#video-play');
-const videoHint = document.querySelector('#video-hint');
 const bgm = document.querySelector('#bgm');
 const bgmToggle = document.querySelector('#bgm-toggle');
 const bgmTip = document.querySelector('#bgm-tip');
@@ -1102,17 +891,14 @@ if (bgm) {
 if (finalVideo && videoPlayButton) {
   finalVideo.addEventListener('play', () => {
     videoPlayButton.hidden = true;
-    if (videoHint) videoHint.hidden = true;
   });
   finalVideo.addEventListener('pause', () => {
     if (!finalVideo.ended) {
       videoPlayButton.hidden = false;
-      if (videoHint) videoHint.hidden = false;
     }
   });
   finalVideo.addEventListener('ended', () => {
     videoPlayButton.hidden = false;
-    if (videoHint) videoHint.hidden = false;
     startBgmAfterVideo();
   });
   finalVideo.addEventListener('error', startBgmAfterVideo);

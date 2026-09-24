@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#f1f7f5" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>WIN BIG · 锦秋基金济州岛步道相册</title>
+  <title>WIN BIG · 锦秋基金济州岛团建相册</title>
   <link rel="icon" type="image/png" href="public/brand/jinqiu-logo.png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -15,16 +15,13 @@
       <img src="public/brand/jinqiu-logo.png" alt="锦秋基金 Logo" width="431" height="570" />
     </header>
     <div class="video-hero-inner">
-      <p class="route-kicker">WIN BIG · THE OPENING SCENE</p>
       <h2 id="video-title">这一次，我们赢个大的</h2>
-      <p class="video-intro">视频结束后，主题曲自动响起；再沿着记忆步道走回济州岛。</p>
       <div class="video-frame">
         <video id="final-video" autoplay muted playsinline controls preload="auto">
           <source src="public/videos/final-memory.mp4" type="video/mp4" />
           <p>你的浏览器不支持视频播放。</p>
         </video>
         <button class="video-play" id="video-play" type="button" aria-label="播放开场视频"><span>▶</span></button>
-        <p class="video-hint" id="video-hint">视频播放中 · 静音自动播放</p>
       </div>
     </div>
   </section>
@@ -36,58 +33,24 @@
         <div class="route-background-line" aria-hidden="true"></div>
 
         <section class="activity-panel" id="activity-panel" aria-live="polite" aria-hidden="true"></section>
-
-        <section class="activity-transition" id="activity-transition" aria-live="polite" aria-labelledby="transition-title" aria-hidden="true">
-          <div class="transition-route" aria-hidden="true"><b></b><i></i><em></em></div>
-          <p class="route-kicker" id="transition-kicker">继续向前</p>
-          <h2 id="transition-title">走进下一站</h2>
-          <p id="transition-copy">下一段活动正在靠近。</p>
-        </section>
-
-        <div class="stage-progress" aria-hidden="true"><span id="stage-progress-bar"></span></div>
-      </div>
-    </section>
-
-    <section class="route-note" id="route-note" aria-labelledby="note-title">
-      <div class="route-note-inner">
-        <p class="route-kicker">WIN BIG / MEMORY WALK</p>
-        <h2 id="note-title">主路留下重要的瞬间，<br /><em>其余记忆，停下来再看。</em></h2>
-        <div class="note-columns">
-          <p><strong>沿路：</strong>六个精选场景，每站四张照片。中间是 WIN BIG，两边是这次团建最值得停下来的画面。</p>
-          <p><strong>停留：</strong>点击照片进入这一场景的完整相册；活动留言仍然保留在对应的站点。</p>
-        </div>
-        <button class="archive-button" id="open-archive" type="button">打开完整相册</button>
-        <p class="truth-note">精选照片依据现有活动分区和本地文件顺序整理；完整相册仍保留原始活动分类与全部图片，未修改原始照片。</p>
-        <p class="comment-note">每个活动板块保留活动回声与留言入口。当前留言仅保存在浏览器本机，尚未接入多人共享后端。</p>
-        <a class="back-to-start" href="#route-top">重新走一遍</a>
       </div>
     </section>
   </main>
 
   <section class="mailbox-area" id="mailbox-area" aria-labelledby="mailbox-title">
     <div class="mailbox-scene">
-      <div class="bottle-scene" aria-hidden="true">
-        <div class="bottle-waves"><i></i><i></i><i></i></div>
-        <div class="message-bottle" id="message-bottle">
-          <span class="bottle-cork"></span>
-          <span class="bottle-neck"></span>
-          <span class="message-bottle-body">
-            <span class="bottle-glint"></span>
-            <span class="bottle-label"><img class="bottle-logo" src="public/brand/jinqiu-logo.png" alt="" width="431" height="570" /></span>
-          </span>
-        </div>
+      <div class="postbox-scene" aria-hidden="true">
+        <div class="postbox-halo"></div>
+        <img class="postbox-image" id="mailbox-postbox" src="public/brand/postbox.svg" alt="" />
+        <div class="postbox-ground"><i></i><i></i><i></i></div>
       </div>
-      <p class="route-kicker">真心话时刻 · 济州海上的漂流瓶</p>
-      <h2 id="mailbox-title">每一句真心话，都漂到了这里</h2>
-      <p class="mailbox-intro">留言化成一张小纸条，漂过这段海岸，和锦秋 Logo 一起留在这里。</p>
+      <h2 id="mailbox-title">每一句真心话，都投进了这个信箱</h2>
       <div id="mailbox-list" class="mailbox-list"></div>
-      <p class="comment-private">留言与评论仅保存在当前浏览器，不会自动同步给其他同事。</p>
     </div>
   </section>
 
   <footer class="route-footer">
-    <div><img src="public/brand/jinqiu-logo.png" alt="锦秋基金 Jinqiu Capital" width="431" height="570" /><span>锦秋基金 · WIN BIG 济州岛步道相册</span></div>
-    <span>精选步道原型，不代表最终行程文案</span>
+    <div><img src="public/brand/jinqiu-logo.png" alt="锦秋基金 Jinqiu Capital" width="431" height="570" /><span>Win Big济州岛团建相册</span></div>
   </footer>
 
   <audio id="bgm" loop preload="none">
@@ -107,9 +70,7 @@
   <dialog class="photo-dialog" id="photo-dialog" aria-labelledby="photo-dialog-title">
     <div class="photo-dialog-inner">
       <button class="photo-dialog-close" id="photo-dialog-close" type="button" aria-label="关闭完整相册">×</button>
-      <p class="route-kicker" id="photo-dialog-kicker">SCENE ARCHIVE</p>
       <h2 id="photo-dialog-title">完整相册</h2>
-      <p id="photo-dialog-description" class="photo-dialog-description"></p>
       <div class="photo-dialog-grid" id="photo-dialog-grid"></div>
     </div>
   </dialog>
@@ -117,11 +78,9 @@
   <dialog class="photo-lightbox" id="photo-lightbox" aria-labelledby="photo-lightbox-title">
     <div class="photo-lightbox-inner">
       <button class="photo-lightbox-close" id="photo-lightbox-close" type="button" aria-label="关闭当前照片">×</button>
-      <p class="route-kicker">单张照片</p>
       <h2 id="photo-lightbox-title">照片放大查看</h2>
       <figure class="photo-lightbox-figure">
         <img id="photo-lightbox-image" alt="" />
-        <figcaption id="photo-lightbox-caption"></figcaption>
       </figure>
       <div class="photo-lightbox-controls">
         <button id="photo-lightbox-prev" type="button">上一张</button>
@@ -135,26 +94,24 @@
   <dialog class="comment-dialog" id="comment-dialog" aria-labelledby="comment-dialog-title">
     <div class="comment-dialog-inner">
       <button class="comment-dialog-close" id="comment-dialog-close" type="button" aria-label="关闭活动留言">×</button>
-      <p class="route-kicker" id="comment-dialog-kicker">活动回声</p>
-      <h2 id="comment-dialog-title">给这一站留句话</h2>
+      <h2 id="comment-dialog-title">欢迎JQer留下你的评论</h2>
       <blockquote class="comment-source-quote">
         <p id="comment-source-text"></p>
         <cite id="comment-source-name"></cite>
       </blockquote>
-      <form id="comment-form" aria-describedby="comment-scope">
-        <p class="comment-scope" id="comment-scope">正在写给：这一项活动</p>
-        <label for="comment-name">你的称呼 <span>· 本机试填，非账号身份</span></label>
+      <form id="comment-form">
+        <label for="comment-name">你的称呼</label>
         <input id="comment-name" name="name" type="text" maxlength="24" placeholder="怎么称呼你？" required autocomplete="off" />
-        <label for="comment-text">你想为这一站留下什么？</label>
+        <label for="comment-text">想为这一站留下什么？</label>
         <textarea id="comment-text" name="message" rows="4" maxlength="500" required placeholder="一个没被拍下来的细节，或此刻看到照片的感受……" aria-describedby="comment-count"></textarea>
-        <div class="comment-form-footer"><span id="comment-count">0 / 500</span><button type="submit">寄出真心话</button></div>
+        <div class="comment-form-footer"><span id="comment-count">0 / 500</span><button type="submit">投进信箱</button></div>
+        <p class="comment-storage-note">留言只保存在这台电脑上，其他同事看不到。</p>
         <p id="comment-status" class="comment-status" role="status" aria-live="polite"></p>
       </form>
       <section class="comment-list-section" aria-labelledby="comment-list-title">
-        <div class="comment-list-heading"><h3 id="comment-list-title">这一站的留言 <span id="comment-total">0</span></h3><span>新的在前</span></div>
+        <div class="comment-list-heading"><h3 id="comment-list-title">这一站的留言 <span id="comment-total">0</span></h3></div>
         <div id="comment-list"></div>
       </section>
-      <p class="comment-private">当前留言仅保存于这个浏览器，不会自动同步给其他同事。若要多人共享，需要接入内部身份与后端存储。</p>
     </div>
   </dialog>
 
