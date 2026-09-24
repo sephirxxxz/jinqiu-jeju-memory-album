@@ -5,7 +5,6 @@
 const sceneDetails = {
   "meeting-road": {
     titleClass: "scene-title-meeting",
-    echoTitle: "聊完之后，大家有了这些想法",
     highlights: [
       {
         name: "石头",
@@ -46,7 +45,6 @@ const sceneDetails = {
   },
   "beach-road": {
     titleClass: "scene-title-beach",
-    echoTitle: "原来你还有这一面",
     variety: {
       round: "第 1 回 · 全员高能",
       badge: "🔥",
@@ -93,7 +91,6 @@ const sceneDetails = {
   },
   "maze-road": {
     titleClass: "scene-title-maze",
-    echoTitle: "一起找路，一起想办法",
     variety: {
       round: "第 2 回 · 名场面预警",
       badge: "🧭",
@@ -130,7 +127,6 @@ const sceneDetails = {
   },
   "tag-road": {
     titleClass: "scene-title-tag",
-    echoTitle: "玩的时候，大家都认真了",
     variety: {
       round: "第 3 回 · 笑不活了",
       badge: "💥",
@@ -177,7 +173,6 @@ const sceneDetails = {
   },
   "food-road": {
     titleClass: "scene-title-food",
-    echoTitle: "饭桌上，聊得更近了",
     highlights: [
       {
         name: "石头",
@@ -208,7 +203,6 @@ const sceneDetails = {
   },
   "mountain-road": {
     titleClass: "scene-title-mountain",
-    echoTitle: "爬完这座山，想说点什么",
     highlights: [
       {
         name: "乔众龙",

@@ -448,8 +448,7 @@ commentForm.addEventListener('submit', (event) => {
   commentText.value = '';
   updateCommentCount();
   renderComments();
-  setCommentStatus(saved ? '留言已放进页尾的信箱。' : '已放入本次页面；本机存储不可用，刷新后这封信不会保留。', !saved);
-  sendMailToBox(comments[comments.length - 1].id);
+  setCommentStatus(saved ? '留言已保存在这台电脑上。' : '已放入本次页面；本机存储不可用，刷新后这条留言不会保留。', !saved);
   commentText.focus({ preventScroll: true });
 });
 
@@ -603,8 +602,6 @@ function renderStation(index) {
   world.append(surface, centerLine, wordmark);
 
   const echo = make('section', 'station-echo');
-  echo.setAttribute('aria-labelledby', `echo-${scene.id}`);
-  echo.append(make('h2', '', details.echoTitle || '这一站的回答'));
   const grid = make('div', 'variety-grid');
   let cards = details.variety?.cards;
   if (!cards) {
@@ -683,120 +680,6 @@ if (reducedMotion.matches) {
     document.querySelectorAll('.activity-station > .road-heading, .activity-station > .road-world, .activity-station > .station-echo, .highlight-card').forEach((node) => node.classList.add('is-visible'));
   }
 }
-
-/* ---- 留言投递 + 信箱收集 ---- */
-const mailboxArea = document.querySelector('#mailbox-area');
-const mailboxList = document.querySelector('#mailbox-list');
-
-function formatMailTime(timestamp) {
-  return new Intl.DateTimeFormat('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(timestamp));
-}
-
-function getAllComments() {
-  return comments.slice().sort((a, b) => b.createdAt - a.createdAt);
-}
-
-function renderMailboxList() {
-  if (!mailboxList) return;
-  mailboxList.replaceChildren();
-  const all = getAllComments();
-  if (!all.length) {
-    mailboxList.append(make('p', 'mailbox-empty', '还没有人留言。'));
-    return;
-  }
-  const byActivity = new Map();
-  all.forEach((commentItem) => {
-    const groupFor = byActivity.get(commentItem.activityId) || [];
-    groupFor.push(commentItem);
-    byActivity.set(commentItem.activityId, groupFor);
-  });
-  [...byActivity.entries()].forEach(([activityId, items]) => {
-    const activity = getActivity(activityId);
-    const group = make('div', 'mailbox-group');
-    group.append(make('h3', '', activity.title));
-    const rows = make('div', 'mailbox-rows');
-    items.forEach((commentItem) => {
-      const row = make('article', 'mailbox-card');
-      row.dataset.id = commentItem.id;
-      const head = make('div', 'mailbox-card-head');
-      head.append(make('strong', '', commentItem.name), make('time', '', formatMailTime(commentItem.createdAt)));
-      row.append(head, make('p', 'mailbox-card-text', commentItem.text));
-      rows.append(row);
-    });
-    group.append(rows);
-    mailboxList.append(group);
-  });
-  // 评论也统一收进信箱
-  const reactionComments = Object.entries(reactions).flatMap(([key, entry]) =>
-    entry.comments.map((comment) => ({ key, ...comment }))).sort((a, b) => b.createdAt - a.createdAt);
-  if (reactionComments.length) {
-    const group = make('div', 'mailbox-group');
-    group.append(make('h3', '', '现场评论'));
-    const rows = make('div', 'mailbox-rows');
-    reactionComments.forEach((comment) => {
-      const row = make('article', 'mailbox-card is-reaction-comment');
-      const head = make('div', 'mailbox-card-head');
-      head.append(make('strong', '', comment.name), make('time', '', formatMailTime(comment.createdAt)));
-      row.append(head, make('p', 'mailbox-card-text', `[${comment.key}] ${comment.text}`));
-      rows.append(row);
-    });
-    group.append(rows);
-    mailboxList.append(group);
-  }
-}
-
-function animateMailboxArrival() {
-  if (reducedMotion.matches) return;
-  mailboxArea.classList.remove('has-arrival');
-  void mailboxArea.offsetWidth;
-  mailboxArea.classList.add('has-arrival');
-  window.setTimeout(() => mailboxArea.classList.remove('has-arrival'), 850);
-}
-
-function sendMailToBox(newCommentId) {
-  if (!mailboxArea) return;
-  if (commentDialog.open) commentDialog.close();
-  if (!reducedMotion.matches && !document.hidden) {
-    const letter = make('div', 'mail-letter');
-    letter.setAttribute('aria-hidden', 'true');
-    document.body.append(letter);
-    const startX = window.innerWidth / 2;
-    const startY = window.innerHeight * 0.42;
-    const applyStart = () => {
-      letter.style.left = `${startX - 19}px`;
-      letter.style.top = `${startY - 11}px`;
-      letter.style.transform = 'rotate(-4deg) scale(1)';
-      letter.style.opacity = '1';
-    };
-    applyStart();
-    mailboxArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        const target = document.querySelector('#mailbox-postbox').getBoundingClientRect();
-        const dx = (target.left + target.width / 2) - (startX + 19);
-        const dy = (target.top + target.height / 2) - (startY + 11);
-        letter.style.transform = `translate(${dx}px, ${dy}px) rotate(16deg) scale(.18)`;
-        setTimeout(() => {
-          letter.remove();
-          mailboxArea.classList.add('is-open');
-          animateMailboxArrival();
-          renderMailboxList();
-          const fresh = mailboxArea.querySelector(`.mailbox-card[data-id="${CSS.escape(newCommentId)}"]`);
-          if (fresh) {
-            fresh.classList.add('is-new');
-            setTimeout(() => fresh.scrollIntoView({ behavior: 'smooth', block: 'center' }), 250);
-          }
-        }, 950);
-      });
-    });
-  } else {
-    mailboxArea.scrollIntoView({ behavior: 'auto', block: 'center' });
-    mailboxArea.classList.add('is-open');
-    renderMailboxList();
-  }
-}
-
-renderMailboxList();
 
 /* ---- 进入活动区时，视频停播、音乐接棒 ---- */
 const finalVideo = document.querySelector('#final-video');

@@ -195,31 +195,22 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
 .road-world { height: 240px; }
 .station-echo { position: relative; width: min(820px, calc(100% - 100px)); margin: 70px auto 0; padding: 43px 52px 48px; border: 1px solid rgba(55,69,79,.14); background: rgba(248,241,227,.92); box-shadow: 0 26px 38px rgba(96,84,60,.12), 0 6px 0 rgba(255,255,255,.72), -15px 18px 0 rgba(196,176,128,.34); transform: translateZ(45px); }
 .station-echo::before { position: absolute; top: 15px; left: 18px; width: 32px; height: 3px; content: ''; background: var(--cyan); box-shadow: 0 7px 0 rgba(185,122,78,.2); transform: rotate(-4deg); }
-.station-echo h2 { margin: 0 0 12px; font: 500 clamp(30px, 4vw, 51px)/1.15 var(--display); letter-spacing: -.06em; }
-.station-source-quote { margin: 0 0 30px; padding: 17px 21px; border-left: 3px solid var(--cyan); background: rgba(226,209,164,.62); }
-.station-source-quote p { margin: 0; color: var(--ink); font: 17px/1.85 var(--display); }
-.station-source-quote cite { display: block; margin-top: 10px; color: var(--blue-soft); font: 10px var(--mono); font-style: normal; }
 .highlight-list { display: grid; gap: 14px; }
 .highlight-card { padding: 19px 20px 14px; border: 1px solid rgba(55,69,79,.12); background: rgba(248,241,227,.93); box-shadow: 0 12px 22px rgba(96,84,60,.1); transition: box-shadow .2s ease, transform .2s ease; }
 .highlight-card:hover { box-shadow: 0 18px 30px rgba(96,84,60,.16); transform: translateY(-2px); }
 .highlight-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 34px; }
 .highlight-who { display: flex; align-items: center; gap: 9px; min-width: 0; }
 .highlight-who strong { font: 500 18px/1 var(--display); }
-.highlight-avatar, .variety-avatar, .source-avatar { display: grid; place-items: center; flex: 0 0 auto; overflow: hidden; color: #fff; background: var(--blue); border-radius: 50%; font-size: 12px; }
+.highlight-avatar, .variety-avatar { display: grid; place-items: center; flex: 0 0 auto; overflow: hidden; color: #fff; background: var(--blue); border-radius: 50%; font-size: 12px; }
 .highlight-avatar { width: 34px; height: 34px; }
 .variety-avatar { width: 24px; height: 24px; }
-.source-avatar { width: 22px; height: 22px; }
-.highlight-avatar img, .variety-avatar img, .source-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.highlight-avatar img, .variety-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .highlight-text { margin: 13px 0 0; color: var(--ink); font-size: 14px; line-height: 2; }
-.station-source-cite { display: flex; align-items: center; gap: 8px; }
-.source-cite-copy { min-width: 0; }
 .station-echo-final { margin-top: 30px; }
 @media (max-width: 800px) {
   .activity-station { width: 100%; padding: 76px 17px 50px; }
   .road-world { height: 210px; }
   .station-echo { width: calc(100% - 20px); margin-top: 58px; padding: 31px 20px 34px; }
-  .station-echo h2 { font-size: 35px; }
-  .station-source-quote p { font-size: 15px; }
   .highlight-card { padding: 16px 14px 12px; }
   .highlight-head { align-items: flex-start; flex-direction: column; gap: 6px; }
   .highlight-text { font-size: 14px; line-height: 1.9; }
@@ -284,44 +275,6 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; transform: none; }
   .road-thumb:hover, .road-thumb-more:hover { transform: none; }
 }
 
-/* ---- 信箱与留言 ---- */
-.mailbox-area { color: var(--ink); background: linear-gradient(180deg, var(--sky) 0%, #e8e3d2 48%, #dce2d8 100%); border-top: 1px solid var(--line); }
-.mailbox-scene { width: min(860px, 88vw); margin: 0 auto; padding: 96px 0 110px; text-align: center; }
-/* 信箱图标是手绘蜡笔邮箱，画布已裁到图形外框（见 crayon-mailbox.svg 的 viewBox） */
-.postbox-scene { position: relative; display: grid; place-items: center; width: min(320px, 76vw); height: 200px; margin: 0 auto 30px; }
-.postbox-image { position: relative; z-index: 2; display: block; width: clamp(128px, 14vw, 160px); height: auto; }
-.postbox-ground { position: absolute; z-index: 1; bottom: 30px; left: 50%; width: 220px; height: 26px; transform: translateX(-50%); }
-.postbox-ground i { position: absolute; left: 50%; top: 0; width: 168px; height: 20px; border-top: 2px solid rgba(113,139,130,.3); border-radius: 50%; transform: translateX(-50%); }
-.postbox-ground i:nth-child(2) { top: 7px; width: 214px; opacity: .7; }
-.postbox-ground i:nth-child(3) { top: 14px; width: 146px; opacity: .5; }
-.mailbox-area.is-open .postbox-image { animation: postbox-catch .7s ease-out; }
-.mailbox-area.has-arrival .postbox-image { animation: postbox-arrive .8s ease-in-out; }
-@keyframes postbox-arrive { 0%,100% { transform: translateY(0) rotate(-1deg); } 35% { transform: translateY(-16px) rotate(5deg); } 68% { transform: translateY(3px) rotate(-3deg); } }
-@keyframes postbox-catch { 0%,100% { transform: scale(1) rotate(0); } 32% { transform: scale(1.06) rotate(-2deg); } 70% { transform: scale(.985) rotate(1deg); } }
-@media (prefers-reduced-motion: reduce) {
-  .postbox-image { animation: none !important; }
-}
-.mailbox-area h2 { margin: 0 0 34px; font: 500 clamp(30px, 4.4vw, 54px)/1.15 var(--display); letter-spacing: -.05em; }
-.mailbox-list { text-align: left; }
-.mailbox-empty { padding: 30px 0; color: var(--muted); font-size: 13px; text-align: center; }
-.mailbox-group { margin-top: 20px; }
-.mailbox-group h3 { margin: 0 0 10px; font: 500 20px var(--display); color: var(--blue); }
-.mailbox-rows { display: grid; gap: 10px; }
-.mailbox-card { padding: 14px 17px; border: 1px solid rgba(55,69,79,.12); border-radius: 14px; background: rgba(248,241,227,.93); box-shadow: 0 10px 20px rgba(96,84,60,.09); opacity: 0; transform: translateY(10px); animation: mail-drop .5s ease forwards; }
-.mailbox-card:nth-child(n+1) { animation-delay: calc(0.04s * var(--i, 0)); }
-.mailbox-card.is-reaction-comment { background: rgba(255,244,214,.78); border-color: rgba(194,150,70,.35); }
-.mailbox-card.is-new { border-color: var(--cyan); box-shadow: 0 12px 26px rgba(185,122,78,.22); }
-.mailbox-card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.mailbox-card-head strong { font: 500 14px/1 var(--display); }
-.mailbox-card-head time { color: var(--muted); font: 9px var(--mono); }
-.mailbox-card-text { margin: 8px 0 0; color: var(--ink); white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; line-height: 1.8; }
-@keyframes mail-drop { to { opacity: 1; transform: none; } }
-@media (max-width: 800px) {
-  .mailbox-scene { padding: 76px 0 84px; }
-  .postbox-scene { height: 168px; margin-bottom: 22px; }
-  .postbox-ground { bottom: 24px; }
-}
-
 /* ---- 综艺站：照片 × 反馈卡片 ---- */
 .reaction-bar { flex-wrap: wrap; }
 .reaction-comment-panel { flex-basis: 100%; }
@@ -359,9 +312,8 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; transform: none; }
 body::after { position: fixed; inset: 0; z-index: 4; content: ''; pointer-events: none; opacity: .05; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 .photo-dialog, .comment-dialog { background: #fdf9ee; }
 .station-echo { background: rgba(248,241,227,.88); box-shadow: 0 22px 42px rgba(96,84,60,.14), 0 5px 0 rgba(250,243,225,.7), -14px 16px 0 rgba(222,205,165,.28); }
-.highlight-card, .variety-card, .mailbox-card { background: rgba(248,241,227,.92); }
+.highlight-card, .variety-card { background: rgba(248,241,227,.92); }
 .reaction-like, .reaction-comment, .road-thumbs { background: rgba(250,243,225,.85); }
-.mailbox-card.is-reaction-comment { background: rgba(250,236,205,.85); }
 
 /* ---- 结尾视频：最后一幕 ---- */
 /* 底部收在 #faf5e8，和路道天空层的顶部同色，两页接缝处不会有色带 */
