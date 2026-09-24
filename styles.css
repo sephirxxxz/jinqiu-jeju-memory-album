@@ -173,7 +173,6 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
   .photo-lightbox-controls { gap: 8px; margin-top: 13px; }
   .photo-lightbox-controls button, .photo-lightbox-exit { padding: 8px 10px; }
   .video-brand { padding: 16px 20px; }
-  .video-brand img { width: 38px; }
   .video-area { padding: 76px 0 84px; }
   .video-hero { min-height: 100svh; padding: 65px 0 58px; }
   .video-hero .video-frame { margin-bottom: 0; }
@@ -450,9 +449,9 @@ body::after { position: fixed; inset: 0; z-index: 4; content: ''; pointer-events
 /* ---- 结尾视频：最后一幕 ---- */
 /* 底部收在 #faf5e8，和路道天空层的顶部同色，两页接缝处不会有色带 */
 .video-area { position: relative; color: var(--ink); background: linear-gradient(180deg, var(--sky-deep) 0%, #faf5e8 100%); border-top: 1px solid var(--line); padding: 110px 0 120px; }
-/* 开场页左上角的品牌标志（原来在第二页中央） */
+/* 开场页左上角的手绘标题：锦秋基金 Outing @Jeju Korea（白底已抠除） */
 .video-brand { position: absolute; z-index: 20; top: 0; left: 0; padding: 24px 4.5vw; pointer-events: none; }
-.video-brand img { display: block; width: clamp(44px, 4.2vw, 60px); height: auto; filter: drop-shadow(0 10px 16px rgba(55,69,79,.15)); }
+.video-brand img { display: block; width: clamp(132px, 14vw, 206px); height: auto; }
 .video-hero { min-height: 100svh; display: grid; place-items: center; padding: 78px 0 90px; }
 .video-hero-inner { width: min(1000px, 92vw); margin: 0 auto; text-align: center; }
 .video-scene, .video-area { text-align: center; }
