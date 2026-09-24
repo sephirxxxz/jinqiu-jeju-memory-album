@@ -528,7 +528,7 @@ function renderHighlightCard(item, sceneTitle, listIndex) {
 
 function renderVarietyCard(scene, data, cardIndex) {
   const card = make('article', 'variety-card');
-  const key = `${scene.title}-${cardIndex}`;
+  const key = data.reactionKey || `${scene.reactionTitle || scene.title}-${cardIndex}`;
   card.dataset.reactionKey = key;
   const sceneIndex = scenes.indexOf(scene);
   const photoButton = make('button', 'variety-photo');
@@ -543,7 +543,7 @@ function renderVarietyCard(scene, data, cardIndex) {
   const imageIndex = scene.allImages.findIndex((file) => file === data.image);
   photoButton.addEventListener('click', () => openSceneArchive(sceneIndex, imageIndex === -1 ? 0 : imageIndex, photoButton));
   const caption = make('figcaption', 'variety-caption');
-  caption.append(make('span', 'variety-tag', data.tag));
+  if (data.tag) caption.append(make('span', 'variety-tag', data.tag));
   const quoteWrap = make('div', 'variety-quote-wrap');
   const varietyWho = make('span', 'variety-who');
   varietyWho.append(makeFeedbackAvatar(data.who, 'variety-avatar'), make('span', 'variety-who-name', displayFeedbackName(data.who)));
@@ -594,7 +594,7 @@ function renderStation(index) {
     more.addEventListener('click', () => openSceneArchive(index, 0, more));
     aside.append(more);
   }
-  heading.append(headingMain, aside);
+  heading.append(headingMain);
 
   const world = make('div', 'road-world');
   const surface = make('div', 'road-surface');
@@ -608,9 +608,6 @@ function renderStation(index) {
   commentButton.setAttribute('aria-label', `给${scene.title}写一条评论`);
   commentButton.addEventListener('click', () => openSceneComments(index, commentButton));
   interactionSign.append(stopFace, commentButton);
-  const leftStack = make('div', 'road-photo-stack road-photo-stack-left');
-  const rightStack = make('div', 'road-photo-stack road-photo-stack-right');
-
   const appendProp = (className) => {
     const prop = make('span', `road-prop ${className}`);
     prop.setAttribute('aria-hidden', 'true');
@@ -618,50 +615,28 @@ function renderStation(index) {
   };
   (details.props || ['prop-tangerine', 'prop-stone']).forEach(appendProp);
 
-  const isVariety = !!details.variety;
   world.append(surface, centerLine, wordmark, interactionSign);
-  if (!isVariety) {
-    const appendPhoto = (stack, imageIndex) => {
-      const file = scene.images[imageIndex];
-      if (!file) return;
-      const button = make('button', 'road-photo');
-      button.type = 'button';
-      button.setAttribute('aria-label', `打开${scene.title}完整相册`);
-      const image = make('img');
-      image.src = thumbUrl(file);
-      image.alt = `${scene.title}现场照片`;
-      image.loading = index === 0 ? 'eager' : 'lazy';
-      image.decoding = 'async';
-      button.append(image);
-      button.addEventListener('click', () => openSceneArchive(index, imageIndex, button));
-      stack.append(button);
-    };
-    world.append(leftStack, rightStack);
-    appendPhoto(leftStack, 0);
-    appendPhoto(leftStack, 2);
-    appendPhoto(rightStack, 1);
-    appendPhoto(rightStack, 3);
-  }
 
   const echo = make('section', 'station-echo');
   echo.setAttribute('aria-labelledby', `echo-${scene.id}`);
-  if (isVariety) {
-    echo.append(make('h2', '', details.echoTitle || '这一站的回答'));
-    const grid = make('div', 'variety-grid');
-    details.variety.cards.forEach((cardData, cardIndex) => grid.append(renderVarietyCard(scene, cardData, cardIndex)));
-    echo.append(grid);
-  } else {
-    echo.append(make('h2', '', details.echoTitle || '这一站的回答'));
+  echo.append(make('h2', '', details.echoTitle || '这一站的回答'));
+  const grid = make('div', 'variety-grid');
+  let cards = details.variety?.cards;
+  if (!cards) {
     const source = getActivity(scene.commentId);
-    const quote = make('blockquote', 'station-source-quote');
-    const quoteCite = make('cite', 'station-source-cite');
-    quoteCite.append(makeFeedbackAvatar(source.feedback.source, 'source-avatar'), make('span', 'source-cite-copy', `— ${displayFeedbackName(source.feedback.source)} · ${source.feedback.prompt}`));
-    quote.append(make('p', '', `“${source.feedback.quote}”`), quoteCite);
-    echo.append(quote);
-    if (details.highlights && details.highlights.length) {
-      echo.append(renderVoiceFeedbackList(details.highlights, scene.title));
-    }
+    cards = [
+      { tag: source.feedback.prompt, quote: source.feedback.quote, who: source.feedback.source,
+        reactionKey: `${scene.reactionTitle}-source` },
+      ...(details.highlights || []).map((item, i) => ({
+        tag: item.source, quote: item.text, who: item.name,
+        reactionKey: `${scene.reactionTitle}-${i}`
+      }))
+    ].map((item, i) => ({ ...item, image: scene.allImages[i % scene.allImages.length] }));
   }
+  cards.forEach((cardData, cardIndex) => grid.append(renderVarietyCard(scene, cardData, cardIndex)));
+  echo.append(grid);
+  const archiveLabel = make('h3', 'archive-label', '照片合集');
+  echo.append(archiveLabel, aside);
 
   station.append(heading, world);
   station.append(echo);
@@ -669,10 +644,13 @@ function renderStation(index) {
 }
 
 function renderSuggestionsSection() {
-  const section = make('section', 'station-echo station-echo-final');
+  const section = make('section', 'activity-station suggestions-station');
   section.id = 'station-suggestions';
-  section.append(make('h2', '', '对下一次团建，大家还有这些想法'));
-  section.append(renderVoiceFeedbackList(feedbackSuggestions, '建议'));
+  const heading = make('div', 'road-heading');
+  heading.append(make('h1', 'scene-title', '下一站，去哪？'));
+  const echo = make('div', 'station-echo');
+  echo.append(renderVoiceFeedbackList(feedbackSuggestions, '建议'));
+  section.append(heading, echo);
   return section;
 }
 
@@ -835,90 +813,102 @@ function sendMailToBox(newCommentId) {
 
 renderMailboxList();
 
-/* ---- 主题曲：视频结束后自动播放 ---- */
+/* ---- 进入活动区时，视频停播、音乐接棒 ---- */
 const finalVideo = document.querySelector('#final-video');
 const videoPlayButton = document.querySelector('#video-play');
 const bgm = document.querySelector('#bgm');
 const bgmToggle = document.querySelector('#bgm-toggle');
 const bgmTip = document.querySelector('#bgm-tip');
+const routeTop = document.querySelector('#route-top');
 let bgmAvailable = true;
 let bgmManuallyPaused = false;
-let bgmWaitingForGesture = false;
+let albumActive = false;
+let bgmBlocked = false;
+// 滚动不算“用户操作”，浏览器会拦截滚动触发的自动播放，
+// 所以在活动区里等用户第一次点击或按键时再接着播。
 const bgmGestureEvents = ['pointerdown', 'keydown', 'touchstart'];
 
-const syncBgmButton = (playing) => {
-  if (!bgmToggle) return;
+function syncBgmButton(playing) {
   bgmToggle.setAttribute('aria-pressed', String(playing));
-  bgmToggle.querySelector('.bgm-label').textContent = 'WIN BIG';
-};
+}
+
+function stopWaitingForBgmGesture() {
+  bgmBlocked = false;
+  bgmGestureEvents.forEach((eventName) => window.removeEventListener(eventName, waitForBgmGesture));
+}
 
 function playBgm() {
-  if (!bgm || !bgmAvailable) {
-    if (bgmTip) bgmTip.hidden = false;
+  if (!albumActive || !bgmAvailable) {
+    if (albumActive) bgmTip.hidden = false;
     return;
   }
   bgm.play().then(() => {
-    bgmWaitingForGesture = false;
+    // 离开活动区或手动暂停发生在异步播放完成前，也不能让音乐继续响。
+    if (!albumActive || bgmManuallyPaused) {
+      bgm.pause();
+      return;
+    }
+    stopWaitingForBgmGesture();
+    bgmTip.hidden = true;
     syncBgmButton(true);
   }).catch(() => {
-    bgmWaitingForGesture = true;
-    if (bgmTip) bgmTip.hidden = false;
+    if (!albumActive || bgmManuallyPaused) return;
+    bgmBlocked = true;
+    bgmTip.hidden = false;
+    bgmGestureEvents.forEach((eventName) => window.addEventListener(eventName, waitForBgmGesture, { passive: true }));
   });
 }
 
 function waitForBgmGesture() {
-  if (!bgmWaitingForGesture) return;
+  if (!bgmBlocked) return;
   playBgm();
-  if (!bgmWaitingForGesture) {
-    bgmGestureEvents.forEach((eventName) => window.removeEventListener(eventName, waitForBgmGesture));
-  }
 }
 
-function startBgmAfterVideo() {
-  if (bgmManuallyPaused) return;
-  playBgm();
-  if (bgmWaitingForGesture) {
-    bgmGestureEvents.forEach((eventName) => window.addEventListener(eventName, waitForBgmGesture, { passive: true }));
-  }
-}
-
-if (bgm) {
-  bgm.addEventListener('error', () => { bgmAvailable = false; });
-  bgm.addEventListener('playing', () => { bgmAvailable = true; });
-  bgm.addEventListener('pause', () => syncBgmButton(false));
-  bgm.addEventListener('ended', () => syncBgmButton(false));
-}
-
-if (finalVideo && videoPlayButton) {
-  finalVideo.addEventListener('play', () => {
-    videoPlayButton.hidden = true;
-  });
-  finalVideo.addEventListener('pause', () => {
-    if (!finalVideo.ended) {
-      videoPlayButton.hidden = false;
-    }
-  });
-  finalVideo.addEventListener('ended', () => {
-    videoPlayButton.hidden = false;
-    startBgmAfterVideo();
-  });
-  finalVideo.addEventListener('error', startBgmAfterVideo);
-  videoPlayButton.addEventListener('click', () => { finalVideo.play(); });
-}
-
-if (bgm && bgmToggle) {
-  bgmToggle.addEventListener('click', () => {
-    if (bgm.paused) {
-      bgmManuallyPaused = false;
-      playBgm();
-    } else {
-      bgmManuallyPaused = true;
-      bgm.pause();
-      syncBgmButton(false);
-    }
-  });
-  bgmTip.addEventListener('click', (event) => {
-    if (event.target === bgmTip || event.target.closest('a')) return;
+function syncAlbumAudio() {
+  // 第二屏露出近一半时切换声音；只在跨过边界时切换，避免滚动重复播放。
+  const enteringAlbum = routeTop.getBoundingClientRect().top <= window.innerHeight * 0.6;
+  if (enteringAlbum === albumActive) return;
+  albumActive = enteringAlbum;
+  bgmToggle.hidden = !albumActive;
+  if (albumActive) {
+    finalVideo.pause();
+    if (!bgmManuallyPaused) playBgm();
+  } else {
+    bgm.pause();
     bgmTip.hidden = true;
-  });
+    stopWaitingForBgmGesture();
+  }
 }
+
+bgmToggle.hidden = true;
+window.addEventListener('scroll', syncAlbumAudio, { passive: true });
+window.addEventListener('resize', syncAlbumAudio);
+syncAlbumAudio();
+
+bgm.addEventListener('error', () => { bgmAvailable = false; });
+bgm.addEventListener('playing', () => { bgmAvailable = true; });
+bgm.addEventListener('pause', () => syncBgmButton(false));
+bgm.addEventListener('ended', () => syncBgmButton(false));
+
+finalVideo.addEventListener('play', () => {
+  videoPlayButton.hidden = true;
+  if (!bgm.paused) bgm.pause();
+  if (albumActive) finalVideo.pause();
+});
+finalVideo.addEventListener('pause', () => {
+  if (!finalVideo.ended) videoPlayButton.hidden = false;
+});
+finalVideo.addEventListener('ended', () => { videoPlayButton.hidden = false; });
+videoPlayButton.addEventListener('click', () => { finalVideo.play(); });
+
+bgmToggle.addEventListener('click', () => {
+  if (bgm.paused) {
+    bgmManuallyPaused = false;
+    playBgm();
+  } else {
+    bgmManuallyPaused = true;
+    stopWaitingForBgmGesture();
+    bgm.pause();
+  }
+});
+bgmTip.addEventListener('click', () => { bgmTip.hidden = true; });

@@ -40,7 +40,6 @@
   <section class="mailbox-area" id="mailbox-area" aria-labelledby="mailbox-title">
     <div class="mailbox-scene">
       <div class="postbox-scene" aria-hidden="true">
-        <div class="postbox-halo"></div>
         <img class="postbox-image" id="mailbox-postbox" src="public/brand/postbox.svg" alt="" />
         <div class="postbox-ground"><i></i><i></i><i></i></div>
       </div>
@@ -54,7 +53,7 @@
   </footer>
 
   <audio id="bgm" loop preload="none">
-    <source src="public/audio/hall-of-fame.mp3" type="audio/mpeg" />
+    <source src="public/audio/hall-of-fame.mp3?v=2" type="audio/mpeg" />
   </audio>
   <button class="bgm-toggle" id="bgm-toggle" type="button" aria-label="播放/暂停主题曲 Hall of Fame" aria-pressed="false">
     <span class="bgm-note">♫</span>
@@ -62,9 +61,7 @@
   </button>
   <div class="bgm-tip" id="bgm-tip" role="status" hidden>
     <strong>主题曲准备好了</strong>
-    <p>视频结束后会自动播放；如果浏览器拦截了自动播放，请点击右下角的 WIN BIG。</p>
-    <a href="https://music.163.com/song?id=540333190" target="_blank" rel="noreferrer">在网易云听原版 →</a>
-    <a href="https://www.youtube.com/watch?v=mk48xRzuNvA" target="_blank" rel="noreferrer">在 YouTube 听原版 →</a>
+    <p>浏览器拦住了自动播放。点一下页面任意位置，或点右下角的 WIN BIG 就能听到。</p>
   </div>
 
   <dialog class="photo-dialog" id="photo-dialog" aria-labelledby="photo-dialog-title">

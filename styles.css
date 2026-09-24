@@ -39,7 +39,7 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
 
 .activity-panel{ position: absolute; inset: 0; opacity: 0; pointer-events: none; transform: translate3d(0, 18px, 0); transform-style: preserve-3d; backface-visibility: hidden; transition: opacity .18s linear, transform .18s linear; will-change: transform, opacity; }
 .activity-panel { z-index: 3; padding: 10vh 5.8vw 6vh; }
-/* 站台标题与照片墙都居中：照片不再挤在右侧，与中间的道路对齐 */
+/* 站台标题居中；照片合集在每站留言末尾 */
 .road-heading { display: flex; flex-direction: column; align-items: center; gap: 20px; width: min(1240px, 89vw); margin: 0 auto 12px; text-align: center; transform: translateZ(48px); transform-style: preserve-3d; }
 .road-heading h1 { margin: 0; font: 500 clamp(42px, 5.2vw, 78px)/1 var(--display); letter-spacing: -.07em; }
 .road-aside { width: auto; margin-bottom: 0; }
@@ -64,18 +64,6 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
 .road-interaction-sign .road-comment-action { position: relative; z-index: 1; min-height: 31px; padding: 7px 10px; color: var(--blue); border: 1px solid rgba(55,69,79,.3); background: rgba(255,253,243,.94); box-shadow: 0 8px 16px rgba(92,78,54,.17); font: 700 11px/1 var(--mono); letter-spacing: .04em; white-space: nowrap; }
 .road-interaction-sign .road-comment-action::before { content: none; }
 .road-interaction-sign .road-comment-action:hover, .road-interaction-sign .road-comment-action:focus-visible { color: #fff; border-color: var(--blue); background: var(--blue); transform: translateY(-2px); }
-.road-photo-stack { position: absolute; z-index: 3; top: 3%; bottom: 3%; display: flex; flex-direction: column; justify-content: space-between; width: 31%; transform-style: preserve-3d; }
-.road-photo-stack-left { left: 1%; }
-.road-photo-stack-right { right: 1%; }
-.road-photo { display: block; width: 100%; height: 45%; padding: 9px; border: 1px solid var(--line); background: rgba(248,241,227,.93); box-shadow: 0 18px 35px rgba(88,74,52,.12); transform-style: preserve-3d; transition: transform .25s ease, box-shadow .25s ease; }
-.road-photo img { display: block; width: 100%; height: 100%; object-fit: contain; background: #e9dfc7; }
-.road-photo-stack-left .road-photo:nth-child(1) { transform: rotateY(8deg) rotateZ(-1.2deg) translateZ(55px); }
-.road-photo-stack-left .road-photo:nth-child(2) { transform: rotateY(6deg) rotateZ(1deg) translateZ(25px); }
-.road-photo-stack-right .road-photo:nth-child(1) { transform: rotateY(-8deg) rotateZ(1.2deg) translateZ(55px); }
-.road-photo-stack-right .road-photo:nth-child(2) { transform: rotateY(-6deg) rotateZ(-1deg) translateZ(25px); }
-.road-photo:hover, .road-photo:focus-visible { z-index: 5; box-shadow: 0 25px 50px rgba(88,74,52,.2); }
-.road-photo-stack-left .road-photo:hover, .road-photo-stack-left .road-photo:focus-visible { transform: rotateY(2deg) scale(1.04) translateZ(105px); }
-.road-photo-stack-right .road-photo:hover, .road-photo-stack-right .road-photo:focus-visible { transform: rotateY(-2deg) scale(1.04) translateZ(105px); }
 .road-prop { position: absolute; z-index: 5; display: block; pointer-events: none; transform-style: preserve-3d; }
 .prop-tangerine { left: 37%; bottom: 4%; width: 29px; height: 29px; border-radius: 50%; background: radial-gradient(circle at 32% 27%, #ffd38a 0 9%, #f4a04f 28%, #dd743c 100%); box-shadow: 10px 14px 18px rgba(130,87,48,.2); transform: translateZ(120px) rotateZ(-12deg); }
 .prop-tangerine::before { position: absolute; top: -5px; left: 15px; width: 10px; height: 7px; content: ''; border-radius: 100% 0 100% 0; background: #6c9b67; transform: rotate(-25deg); }
@@ -166,10 +154,6 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
   .road-action { min-height: 40px; padding: 10px 12px; font-size: 12px; }
   .road-world { width: 100%; height: min(52svh, 430px); }
   .road-surface { width: 32%; }
-  .road-photo-stack { width: 34%; top: 2%; bottom: 2%; }
-  .road-photo-stack-left { left: 0; }
-  .road-photo-stack-right { right: 0; }
-  .road-photo { height: auto; aspect-ratio: 4 / 3; padding: 5px; }
   .road-wordmark { padding: 7px 9px; font-size: 18px; }
   .activity-gallery-shell { width: 100%; }
   .activity-gallery { height: min(37svh, 360px); }
@@ -208,7 +192,7 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
   html, .activity-gallery { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
   .route-stage { perspective: none; }
-  .activity-panel, .road-heading, .road-world, .road-photo, .road-prop { transform: none !important; }
+  .activity-panel, .road-heading, .road-world, .road-prop { transform: none !important; }
   .road-wordmark { transform: translate(-50%, -50%) !important; }
   .road-surface, .road-center-line, .road-interaction-sign { transform: translateX(-50%) !important; }
 }
@@ -224,14 +208,13 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
 .scene-title::after { position: absolute; right: -4px; bottom: 0; content: ''; width: 76%; height: 7px; border-radius: 90% 25% 60% 15%; background: rgba(245,160,79,.4); transform: rotate(-2deg); }
 .scene-title-beach { transform: rotate(-1.5deg); }
 .scene-title-beach::after { background: rgba(185,122,78,.28); transform: rotate(2deg); }
-.scene-title-maze::before { position: absolute; top: -14px; right: -24px; content: '⌁'; color: #78a675; font-size: 29px; transform: rotate(16deg); }
 .scene-title-tag { text-shadow: 3px 3px 0 rgba(239,130,93,.2); }
 .scene-title-tag::after { height: 12px; background: rgba(235,108,83,.2); clip-path: polygon(0 10%, 16% 0, 31% 16%, 48% 3%, 67% 20%, 84% 4%, 100% 12%, 94% 100%, 73% 85%, 56% 100%, 35% 84%, 15% 100%); }
 .scene-title-food::after { width: 100%; height: 3px; background: #df8c55; transform: rotate(-1deg); }
 .scene-title-mountain::before { position: absolute; left: 35%; bottom: -1px; content: '▲'; color: rgba(71,125,107,.32); font-size: 22px; transform: translateY(3px); }
 .scene-feature-label { margin: 13px 0 5px; color: #d1764d; font: 10px var(--mono); letter-spacing: .1em; }
 .scene-feature-text { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
-.road-world { height: min(66vh, 610px); }
+.road-world { height: 240px; }
 .road-interaction-sign { top: calc(50% + 52px); }
 .road-stop-face { white-space: nowrap; }
 .station-echo { position: relative; width: min(820px, calc(100% - 100px)); margin: 70px auto 0; padding: 43px 52px 48px; border: 1px solid rgba(55,69,79,.14); background: rgba(248,241,227,.92); box-shadow: 0 26px 38px rgba(96,84,60,.12), 0 6px 0 rgba(255,255,255,.72), -15px 18px 0 rgba(196,176,128,.34); transform: translateZ(45px); }
@@ -282,7 +265,7 @@ a:focus-visible, button:focus-visible, .activity-gallery:focus-visible { outline
 .prop-backpack::after { position: absolute; left: 8px; right: 8px; top: 13px; height: 4px; content: ''; border-radius: 3px; background: #f0c281; }
 @media (max-width: 800px) {
   .activity-station { width: 100%; padding: 76px 17px 50px; }
-  .road-world { height: min(58svh, 470px); }
+  .road-world { height: 210px; }
   .station-echo { width: calc(100% - 20px); margin-top: 58px; padding: 31px 20px 34px; }
   .station-echo h2 { font-size: 35px; }
   .station-source-quote p { font-size: 15px; }
@@ -359,7 +342,6 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; transform: none; }
 .prop-cloud::after { left: 19px; top: -3px; width: 14px; height: 14px; }
 
 /* ---- 微交互 ---- */
-.road-photo:active img { transform: scale(.99); filter: brightness(.97); }
 .road-interaction-sign:hover .road-stop-face { animation: sign-wiggle .5s ease; }
 @keyframes sign-wiggle { 0%,100% { transform: rotateZ(-3deg) translateZ(14px); } 25% { transform: rotateZ(-6deg) translateZ(14px); } 60% { transform: rotateZ(0deg) translateZ(14px); } }
 @media (prefers-reduced-motion: reduce) {
@@ -373,8 +355,9 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; transform: none; }
   .reaction-bar { margin-top: 10px; }
 }
 
-/* ---- 右上角微缩图墙（原处 hover 放大） ---- */
-.road-thumbs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; width: min(440px, 56vw); padding: 6px; border: 1px solid var(--line); border-radius: 14px; background: rgba(248,241,227,.9); }
+/* ---- 每站留言末尾的照片合集 ---- */
+.archive-label { margin: 36px 0 14px; font: 500 24px/1.3 var(--display); text-align: center; }
+.road-thumbs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; width: min(440px, 100%); margin: 0 auto; padding: 6px; border: 1px solid var(--line); border-radius: 14px; background: rgba(248,241,227,.9); }
 .road-thumb, .road-thumb-more { position: relative; display: block; width: 100%; aspect-ratio: 4 / 3; padding: 0; overflow: hidden; border: 1px solid rgba(55,69,79,.16); border-radius: 9px; background: #e9dfc7; transition: transform .22s ease, box-shadow .22s ease, z-index 0s; }
 .road-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .22s ease; }
 .road-thumb-more { display: grid; place-items: center; color: var(--blue); background: rgba(226,209,164,.65); font: 700 15px/1 var(--mono); }
@@ -390,15 +373,13 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; transform: none; }
 .mailbox-scene { width: min(860px, 88vw); margin: 0 auto; padding: 96px 0 110px; text-align: center; }
 /* 信箱图标是 fluent-emoji-flat 的 postbox，按要求不放锦秋 Logo。 */
 .postbox-scene { position: relative; display: grid; place-items: center; width: min(320px, 76vw); height: 200px; margin: 0 auto 30px; }
-.postbox-image { position: relative; z-index: 2; display: block; width: clamp(132px, 15vw, 176px); height: auto; filter: drop-shadow(0 18px 26px rgba(96,84,60,.22)); animation: postbox-bob 4.8s ease-in-out infinite; }
-.postbox-halo { position: absolute; z-index: 1; width: 240px; height: 240px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.75), rgba(255,255,255,0) 68%); }
+.postbox-image { position: relative; z-index: 2; display: block; width: clamp(132px, 15vw, 176px); height: auto; filter: drop-shadow(0 18px 26px rgba(96,84,60,.22)); }
 .postbox-ground { position: absolute; z-index: 1; bottom: 30px; left: 50%; width: 220px; height: 26px; transform: translateX(-50%); }
 .postbox-ground i { position: absolute; left: 50%; top: 0; width: 168px; height: 20px; border-top: 2px solid rgba(113,139,130,.3); border-radius: 50%; transform: translateX(-50%); }
 .postbox-ground i:nth-child(2) { top: 7px; width: 214px; opacity: .7; }
 .postbox-ground i:nth-child(3) { top: 14px; width: 146px; opacity: .5; }
 .mailbox-area.is-open .postbox-image { animation: postbox-catch .7s ease-out; }
 .mailbox-area.has-arrival .postbox-image { animation: postbox-arrive .8s ease-in-out; }
-@keyframes postbox-bob { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-8px) rotate(1.5deg); } }
 @keyframes postbox-arrive { 0%,100% { transform: translateY(0) rotate(-1deg); } 35% { transform: translateY(-16px) rotate(5deg); } 68% { transform: translateY(3px) rotate(-3deg); } }
 @keyframes postbox-catch { 0%,100% { transform: scale(1) rotate(0); } 32% { transform: scale(1.06) rotate(-2deg); } 70% { transform: scale(.985) rotate(1deg); } }
 @media (prefers-reduced-motion: reduce) {
@@ -464,7 +445,6 @@ body::after { position: fixed; inset: 0; z-index: 4; content: ''; pointer-events
 .station-echo { background: rgba(248,241,227,.88); box-shadow: 0 22px 42px rgba(96,84,60,.14), 0 5px 0 rgba(250,243,225,.7), -14px 16px 0 rgba(222,205,165,.28); }
 .highlight-card, .variety-card, .mailbox-card { background: rgba(248,241,227,.92); }
 .reaction-like, .reaction-comment, .road-thumbs { background: rgba(250,243,225,.85); }
-.road-photo { background: rgba(248,241,227,.92); border-color: rgba(55,69,79,.18); }
 .mailbox-card.is-reaction-comment { background: rgba(250,236,205,.85); }
 
 /* ---- 结尾视频：最后一幕 ---- */
@@ -491,12 +471,12 @@ body::after { position: fixed; inset: 0; z-index: 4; content: ''; pointer-events
 
 /* ---- 主题曲：右下角音乐开关 ---- */
 .bgm-toggle { position: fixed; z-index: 900; right: 22px; bottom: 22px; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 14px; color: var(--ink); border: 1px solid rgba(55,69,79,.25); border-radius: 999px; background: rgba(248,241,227,.92); box-shadow: 0 12px 26px rgba(96,84,60,.18); font-size: 12px; transition: transform .2s ease, background .2s ease; }
+.bgm-toggle[hidden] { display: none; }
 .bgm-toggle:hover { transform: translateY(-2px); }
-.bgm-note { color: var(--cyan); font-size: 17px; line-height: 1; animation: bgm-spin 3.2s linear infinite; }
+.bgm-note { color: var(--cyan); font-size: 17px; line-height: 1; }
 .bgm-label { letter-spacing: .06em; }
 .bgm-toggle[aria-pressed="true"] { color: #fff; border-color: var(--cyan); background: rgba(185,122,78,.92); }
 .bgm-toggle[aria-pressed="true"] .bgm-note { color: #ffe9c9; }
-@keyframes bgm-spin { to { transform: rotate(360deg); } }
 .bgm-tip { position: fixed; z-index: 901; right: 22px; bottom: 78px; width: min(300px, calc(100vw - 44px)); padding: 16px 18px; border: 1px solid rgba(55,69,79,.2); border-radius: 14px; background: rgba(250,243,225,.96); box-shadow: 0 18px 38px rgba(96,84,60,.22); text-align: left; }
 .bgm-tip strong { display: block; color: var(--ink); font: 500 16px var(--display); }
 .bgm-tip p { margin: 8px 0 12px; color: var(--muted); font-size: 12px; line-height: 1.8; }

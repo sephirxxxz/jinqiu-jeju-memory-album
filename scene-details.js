@@ -242,6 +242,15 @@ const sceneDetails = {
   }
 };
 
+// 撕名牌并入沙滩运动会，原卡片的本机点赞和评论沿用原来的存储键。
+sceneDetails['beach-road'].variety.cards.push(
+  ...sceneDetails['tag-road'].variety.cards.map((card, index) => ({
+    ...card,
+    tag: `撕名牌 · ${card.tag}`,
+    reactionKey: `撕名牌大战-${index}`
+  }))
+);
+
 /* 结尾总区：大家对同事的整体观察 + 给下一次团建的建议（第 5、6 问提炼）。 */
 const feedbackSuggestions = [
   {

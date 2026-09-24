@@ -154,7 +154,8 @@ const activityData = [
 const roadData = [
   {
     "id": "meeting-road",
-    "title": "WIN BIG · 一起聊聊我们的方向",
+    "title": "共创价值观，告白时光胶囊",
+    "reactionTitle": "WIN BIG · 一起聊聊我们的方向",
     "subtitle": "会议与共创",
     "description": "从室内的共同理解开始。",
     "commentId": "meeting",
@@ -165,11 +166,12 @@ const roadData = [
   },
   {
     "id": "beach-road",
-    "title": "沙滩运动与团队挑战",
+    "title": "沙滩运动会，巧思热血碰撞",
+    "reactionTitle": "沙滩运动与团队挑战",
     "subtitle": "把讨论变成一起行动",
     "description": "风、沙滩、协作，以及想赢的那一刻。",
     "commentId": "sports",
-    "activityIds": ["sports", "fight", "sword", "tug", "connect4"],
+    "activityIds": ["sports", "fight", "sword", "tug", "connect4", "tag"],
     "images": [
       "image.png", "IMG_7748.JPG.jpeg", "IMG_20260916_113755.jpg", "IMG_20260916_115917.jpg",
       "IMG_20260916_093030.jpg", "IMG_20260916_103413.jpg", "IMG_20260916_102641_1.jpg",
@@ -178,7 +180,8 @@ const roadData = [
   },
   {
     "id": "maze-road",
-    "title": "花园迷宫",
+    "title": "花园迷宫，打破常规路径",
+    "reactionTitle": "花园迷宫",
     "subtitle": "沿着线索往前走",
     "description": "体力、智力和团体协作汇到同一条路上。",
     "commentId": "maze",
@@ -191,7 +194,8 @@ const roadData = [
   },
   {
     "id": "mountain-road",
-    "title": "汉拿山我们来了",
+    "title": "汉拿山，我们顶峰相见",
+    "reactionTitle": "汉拿山我们来了",
     "subtitle": "向山里走",
     "description": "离开会议室，去山里呼吸新鲜空气。",
     "commentId": "hallasan",
@@ -202,20 +206,9 @@ const roadData = [
     ]
   },
   {
-    "id": "tag-road",
-    "title": "撕名牌大战",
-    "subtitle": "跑起来再说",
-    "description": "五分钟全力奔跑，看见办公室之外的彼此。",
-    "commentId": "tag",
-    "activityIds": ["tag"],
-    "images": [
-      "image_8.png", "image_12.png", "image_14.png", "image_35.png",
-      "image_10.png", "image_16.png", "image_22.png", "image_27.png", "image_30.png", "image_33.png"
-    ]
-  },
-  {
     "id": "food-road",
-    "title": "JQer自己的小饭桌",
+    "title": "烤肉烧酒，今夜无眠",
+    "reactionTitle": "JQer自己的小饭桌",
     "subtitle": "活动之后，围桌坐下",
     "description": "在松弛的氛围里，看见更生活化的彼此。",
     "commentId": "food",
