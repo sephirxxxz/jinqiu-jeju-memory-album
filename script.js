@@ -572,7 +572,8 @@ function renderStation(index) {
   sceneHeading.id = `heading-${scene.id}`;
   headingMain.append(sceneHeading);
   const aside = make('div', 'road-aside road-thumbs');
-  const thumbLimit = 12;
+  // 11 张缩略图 + 1 个「+N」= 12 格，4 列正好 3 行，不会剩一个孤格子。
+  const thumbLimit = 11;
   scene.allImages.slice(0, thumbLimit).forEach((file, i) => {
     const thumb = make('button', 'road-thumb');
     thumb.type = 'button';
@@ -602,9 +603,9 @@ function renderStation(index) {
   const interactionSign = make('div', `road-interaction-sign ${details.signClass || ''}`);
   const stopFace = make('div', 'road-stop-face', details.signFace || '정지');
   stopFace.setAttribute('aria-hidden', 'true');
-  const commentButton = make('button', 'road-action road-comment-action', '真心话时刻');
+  const commentButton = make('button', 'road-action road-comment-action', '欢迎JQer留下你的评论');
   commentButton.type = 'button';
-  commentButton.setAttribute('aria-label', `给${scene.title}写一句真心话`);
+  commentButton.setAttribute('aria-label', `给${scene.title}写一条评论`);
   commentButton.addEventListener('click', () => openSceneComments(index, commentButton));
   interactionSign.append(stopFace, commentButton);
   const leftStack = make('div', 'road-photo-stack road-photo-stack-left');
@@ -720,7 +721,7 @@ if (reducedMotion.matches) {
   }
 }
 
-/* ---- 真心话时刻：小纸条投递 + 信箱收集 ---- */
+/* ---- 留言投递 + 信箱收集 ---- */
 const mailboxArea = document.querySelector('#mailbox-area');
 const mailboxList = document.querySelector('#mailbox-list');
 
@@ -737,7 +738,7 @@ function renderMailboxList() {
   mailboxList.replaceChildren();
   const all = getAllComments();
   if (!all.length) {
-    mailboxList.append(make('p', 'mailbox-empty', '信箱还空着，等第一句真心话。'));
+    mailboxList.append(make('p', 'mailbox-empty', '还没有人留言。'));
     return;
   }
   const byActivity = new Map();
