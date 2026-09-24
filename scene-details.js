@@ -6,9 +6,6 @@ const sceneDetails = {
   "meeting-road": {
     titleClass: "scene-title-meeting",
     echoTitle: "聊完之后，大家有了这些想法",
-    signFace: "메모",
-    signClass: "sign-note",
-    props: ["prop-pencil", "prop-note", "prop-cup", "prop-nameplate"],
     highlights: [
       {
         name: "石头",
@@ -50,9 +47,6 @@ const sceneDetails = {
   "beach-road": {
     titleClass: "scene-title-beach",
     echoTitle: "原来你还有这一面",
-    signFace: "정지",
-    signClass: "sign-stop",
-    props: ["prop-ball", "prop-flag", "prop-shell", "prop-umbrella", "prop-footprint"],
     variety: {
       round: "第 1 回 · 全员高能",
       badge: "🔥",
@@ -100,9 +94,6 @@ const sceneDetails = {
   "maze-road": {
     titleClass: "scene-title-maze",
     echoTitle: "一起找路，一起想办法",
-    signFace: "길찾기",
-    signClass: "sign-maze",
-    props: ["prop-hedge", "prop-dol", "prop-clue", "prop-flower", "prop-boulder"],
     variety: {
       round: "第 2 回 · 名场面预警",
       badge: "🧭",
@@ -140,9 +131,6 @@ const sceneDetails = {
   "tag-road": {
     titleClass: "scene-title-tag",
     echoTitle: "玩的时候，大家都认真了",
-    signFace: "준비",
-    signClass: "sign-tag",
-    props: ["prop-ribbon", "prop-badge", "prop-whistle", "prop-torn", "prop-handprint"],
     variety: {
       round: "第 3 回 · 笑不活了",
       badge: "💥",
@@ -190,9 +178,6 @@ const sceneDetails = {
   "food-road": {
     titleClass: "scene-title-food",
     echoTitle: "饭桌上，聊得更近了",
-    signFace: "맛있게",
-    signClass: "sign-food",
-    props: ["prop-tangerine", "prop-grill", "prop-seafood", "prop-glass", "prop-chopsticks"],
     highlights: [
       {
         name: "石头",
@@ -224,9 +209,6 @@ const sceneDetails = {
   "mountain-road": {
     titleClass: "scene-title-mountain",
     echoTitle: "爬完这座山，想说点什么",
-    signFace: "산길",
-    signClass: "sign-mountain",
-    props: ["prop-peak", "prop-backpack", "prop-flag-mountain", "prop-stick", "prop-cloud"],
     highlights: [
       {
         name: "乔众龙",

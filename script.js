@@ -600,22 +600,7 @@ function renderStation(index) {
   const surface = make('div', 'road-surface');
   const centerLine = make('div', 'road-center-line');
   const wordmark = make('div', 'road-wordmark', 'WIN BIG');
-  const interactionSign = make('div', `road-interaction-sign ${details.signClass || ''}`);
-  const stopFace = make('div', 'road-stop-face', details.signFace || '정지');
-  stopFace.setAttribute('aria-hidden', 'true');
-  const commentButton = make('button', 'road-action road-comment-action', '欢迎JQer留下你的评论');
-  commentButton.type = 'button';
-  commentButton.setAttribute('aria-label', `给${scene.title}写一条评论`);
-  commentButton.addEventListener('click', () => openSceneComments(index, commentButton));
-  interactionSign.append(stopFace, commentButton);
-  const appendProp = (className) => {
-    const prop = make('span', `road-prop ${className}`);
-    prop.setAttribute('aria-hidden', 'true');
-    world.append(prop);
-  };
-  (details.props || ['prop-tangerine', 'prop-stone']).forEach(appendProp);
-
-  world.append(surface, centerLine, wordmark, interactionSign);
+  world.append(surface, centerLine, wordmark);
 
   const echo = make('section', 'station-echo');
   echo.setAttribute('aria-labelledby', `echo-${scene.id}`);
