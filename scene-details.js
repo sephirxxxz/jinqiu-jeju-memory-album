@@ -91,7 +91,7 @@ const sceneDetails = {
   "maze-road": {
     titleClass: "scene-title-maze",
     variety: {
-      round: "第 2 回 · 名场面预警",
+      round: "第 3 回 · 名场面预警",
       badge: "🧭",
       cards: [
         { "image": "image_2.png", "tag": "入口", "quote": "迷宫吧，大家一起解决问题、思考解决方案。", "who": "肖杨" },
@@ -126,7 +126,7 @@ const sceneDetails = {
   "tag-road": {
     titleClass: "scene-title-tag",
     variety: {
-      round: "第 3 回 · 笑不活了",
+      round: "第 2 回 · 笑不活了",
       badge: "💥",
       cards: [
         { "image": "image_8.png", "tag": "开局", "quote": "只有 5 分钟的全力奔跑和用力撕扯，和办公室状态完全相反。", "who": "梦真" },

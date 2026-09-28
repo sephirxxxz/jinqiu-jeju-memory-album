@@ -261,8 +261,10 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; visibility: visible; tra
 .road-thumb:hover, .road-thumb:focus-visible, .road-thumb-more:hover, .road-thumb-more:focus-visible { z-index: 9; box-shadow: 0 16px 30px rgba(88,74,52,.24); transform: scale(1.55); border-color: rgba(185,122,78,.5); }
 .road-thumb:hover img, .road-thumb:focus-visible img { transform: scale(1.06); }
 @media (max-width: 800px) {
-  /* 6 列时每格只有 43x32，低于可点下限；4 列可以到 77x58。 */
+  /* 6 列时每格只有 43x32，低于可点下限；4 列可以到 77x58。
+     320px 的机器上 4 列只有 48x36，所以再加一道最低高度兜底。 */
   .road-thumbs { grid-template-columns: repeat(4, minmax(0, 1fr)); width: 100%; gap: 6px; }
+  .road-thumb, .road-thumb-more { min-height: 44px; }
   .road-thumb:hover, .road-thumb-more:hover { transform: none; }
 }
 
