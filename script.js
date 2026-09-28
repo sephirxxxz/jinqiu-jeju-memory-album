@@ -374,6 +374,8 @@ function renderPhotoGrid(title, images, selectedIndex = 0) {
 function updatePhotoLightbox() {
   const file = photoLightboxImages[photoLightboxIndex];
   if (!file || !photoLightboxImage) return;
+  // 原图最大、最慢，先把加载中转圈挂上。
+  markLoading(photoLightboxImage.parentElement);
   photoLightboxImage.src = imageUrl(file);
   photoLightboxImage.alt = `${photoLightboxTitle.textContent}第 ${photoLightboxIndex + 1} 张照片`;
   photoLightboxCount.textContent = `${photoLightboxIndex + 1} / ${photoLightboxImages.length}`;

@@ -110,12 +110,12 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
   .road-surface { width: 32%; }
   .road-wordmark { padding: 7px 9px; font-size: 18px; }
   .photo-dialog { width: calc(100vw - 24px); max-height: 92svh; }
-  .photo-dialog-inner { max-height: 92svh; padding: 35px 15px 28px; }
+  .photo-dialog-inner { max-height: 92svh; padding: 64px 15px 28px; }
   .photo-dialog h2 { font-size: 40px; }
   .photo-dialog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
   .photo-dialog-close { top: 12px; right: 13px; }
   .photo-lightbox { width: calc(100vw - 16px); max-height: 94svh; }
-  .photo-lightbox-inner { max-height: 94svh; padding: 29px 12px 22px; }
+  .photo-lightbox-inner { max-height: 94svh; padding: 64px 12px 22px; }
   .photo-lightbox-close { top: 9px; right: 9px; }
   .photo-lightbox h2 { margin-bottom: 13px; font-size: 34px; }
   .photo-lightbox-figure img { max-height: 62svh; border-radius: 9px; }
@@ -131,6 +131,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition: none !important; }
+  /* 关掉加载转圈，只留静态圆环。 */
+  .variety-photo.is-loading::after, .road-thumb.is-loading::after, .archive-photo.is-loading::after, .photo-lightbox-figure.is-loading::after { animation: none; border-top-color: rgba(185,122,78,.5); }
   .route-stage { perspective: none; }
   .activity-panel, .road-heading, .road-world { transform: none !important; }
   .road-wordmark { transform: translate(-50%, -50%) !important; }
@@ -247,8 +249,21 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; visibility: visible; tra
 .road-thumbs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; width: min(440px, 100%); margin: 0 auto; padding: 6px; border: 1px solid var(--line); border-radius: 14px; background: rgba(248,241,227,.9); }
 .road-thumb, .road-thumb-more { position: relative; display: block; width: 100%; aspect-ratio: 4 / 3; padding: 0; overflow: hidden; border: 1px solid rgba(55,69,79,.16); border-radius: 9px; background: #e9dfc7; transition: transform .22s ease, box-shadow .22s ease, z-index 0s; }
 .road-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .22s ease; }
-/* 未加载完的图就是一块纸色，本身就是占位，不再加呼吸动画
-   —— 整页有 200 多张图同时挂着加载态，动画是白跑的。 */
+/* 图片没加载完之前给个转圈，不然一整墙纸色方块看起来像坏了。
+   只用 transform 动画，且只在还没加载出来时挂着。 */
+@keyframes photo-loading-spin { to { transform: rotate(1turn); } }
+.variety-photo.is-loading, .road-thumb.is-loading, .archive-photo.is-loading, .photo-lightbox-figure.is-loading { position: relative; }
+.variety-photo.is-loading::after, .road-thumb.is-loading::after, .archive-photo.is-loading::after, .photo-lightbox-figure.is-loading::after {
+  position: absolute; top: 50%; left: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; content: '';
+  border: 2px solid rgba(55,69,79,.16); border-top-color: var(--cyan); border-radius: 50%;
+  animation: photo-loading-spin .8s linear infinite;
+}
+.road-thumb.is-loading::after { width: 15px; height: 15px; margin: -8px 0 0 -8px; }
+/* 放大图没有固定宽高比，没加载出来时框高几乎为 0，转圈会贴在顶上；
+   给个临时高度，图出来之后就撤掉。 */
+.photo-lightbox-figure.is-loading { min-height: min(46svh, 440px); }
+
+/* 破图时在框里直接说明，不要留一块空白。 */
 .variety-photo.has-broken-image::after, .road-thumb.has-broken-image::after, .archive-photo.has-broken-image::after {
   position: absolute; inset: 0; display: grid; place-items: center; padding: 8px;
   content: '照片没加载出来'; color: var(--muted); font-size: 12px; text-align: center;
