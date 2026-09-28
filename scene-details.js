@@ -170,7 +170,7 @@ const sceneDetails = {
   },
   "food-road": {
     titleClass: "scene-title-food",
-    hideWordmark: true,
+    hideRoad: true,
     highlights: [
       {
         name: "石头",

@@ -559,12 +559,10 @@ function renderStation(index) {
   heading.append(headingMain);
 
   const world = make('div', 'road-world');
-  const surface = make('div', 'road-surface');
-  const centerLine = make('div', 'road-center-line');
-  const wordmark = make('div', 'road-wordmark', 'WIN BIG');
-  world.append(surface, centerLine);
-  // 烤肉烧酒那一站不要 WIN BIG 牌子。
-  if (!details.hideWordmark) world.append(wordmark);
+  // 烤肉烧酒那一站整块路面都不要，连它占的高度也一起省掉。
+  if (!details.hideRoad) {
+    world.append(make('div', 'road-surface'), make('div', 'road-center-line'), make('div', 'road-wordmark', 'WIN BIG'));
+  }
 
   const echo = make('section', 'station-echo');
   const grid = make('div', 'variety-grid');
@@ -588,7 +586,8 @@ function renderStation(index) {
   const archiveLabel = make('h3', 'archive-label', '照片合集');
   echo.append(archiveLabel, aside);
 
-  station.append(heading, world);
+  station.append(heading);
+  if (!details.hideRoad) station.append(world);
   station.append(echo);
   return station;
 }
@@ -657,6 +656,7 @@ const videoPlayButton = document.querySelector('#video-play');
 const bgm = document.querySelector('#bgm');
 const bgmToggle = document.querySelector('#bgm-toggle');
 const bgmTip = document.querySelector('#bgm-tip');
+const bgmTipClose = document.querySelector('#bgm-tip-close');
 const routeTop = document.querySelector('#route-top');
 let bgmAvailable = true;
 let bgmManuallyPaused = false;
@@ -665,6 +665,22 @@ let bgmBlocked = false;
 // 滚动不算“用户操作”，浏览器会拦截滚动触发的自动播放，
 // 所以在活动区里等用户第一次点击或按键时再接着播。
 const bgmGestureEvents = ['pointerdown', 'keydown', 'touchstart'];
+
+let bgmTipTimer = 0;
+
+// 提示框挡在内容前面，所以给个关闭按钮，并且十秒后自己收起。
+function showBgmTip() {
+  if (!bgmTip) return;
+  bgmTip.hidden = false;
+  window.clearTimeout(bgmTipTimer);
+  bgmTipTimer = window.setTimeout(() => { bgmTip.hidden = true; }, 10000);
+}
+
+function hideBgmTip() {
+  if (!bgmTip) return;
+  window.clearTimeout(bgmTipTimer);
+  bgmTip.hidden = true;
+}
 
 function syncBgmButton(playing) {
   bgmToggle.setAttribute('aria-pressed', String(playing));
@@ -677,7 +693,7 @@ function stopWaitingForBgmGesture() {
 
 function playBgm() {
   if (!albumActive || !bgmAvailable) {
-    if (albumActive) bgmTip.hidden = false;
+    if (albumActive) showBgmTip();
     return;
   }
   bgm.play().then(() => {
@@ -687,12 +703,12 @@ function playBgm() {
       return;
     }
     stopWaitingForBgmGesture();
-    bgmTip.hidden = true;
+    hideBgmTip();
     syncBgmButton(true);
   }).catch(() => {
     if (!albumActive || bgmManuallyPaused) return;
     bgmBlocked = true;
-    bgmTip.hidden = false;
+    showBgmTip();
     bgmGestureEvents.forEach((eventName) => window.addEventListener(eventName, waitForBgmGesture, { passive: true }));
   });
 }
@@ -713,7 +729,7 @@ function syncAlbumAudio() {
     if (!bgmManuallyPaused) playBgm();
   } else {
     bgm.pause();
-    bgmTip.hidden = true;
+    hideBgmTip();
     stopWaitingForBgmGesture();
   }
 }
@@ -749,7 +765,8 @@ bgmToggle.addEventListener('click', () => {
     bgm.pause();
   }
 });
-bgmTip.addEventListener('click', () => { bgmTip.hidden = true; });
+bgmTipClose.addEventListener('click', hideBgmTip);
+bgmTip.addEventListener('click', (event) => { if (!event.target.closest('a')) hideBgmTip(); });
 
 /* ---- 图片的加载中 / 加载失败状态 ----
    load 和 error 不冒泡，但能在捕获阶段拿到，所以效劳一次全局监听即可。 */

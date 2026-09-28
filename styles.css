@@ -354,7 +354,11 @@ body::after { position: fixed; inset: 0; z-index: 4; content: ''; pointer-events
 .bgm-label { letter-spacing: .06em; }
 .bgm-toggle[aria-pressed="true"] { color: #fff; border-color: var(--cyan); background: rgba(185,122,78,.92); }
 .bgm-toggle[aria-pressed="true"] .bgm-note { color: #ffe9c9; }
-.bgm-tip { position: fixed; z-index: 901; right: 22px; bottom: 78px; width: min(300px, calc(100vw - 44px)); padding: 16px 18px; border: 1px solid rgba(55,69,79,.2); border-radius: 14px; background: rgba(250,243,225,.96); box-shadow: 0 18px 38px rgba(96,84,60,.22); text-align: left; }
+.bgm-tip { position: fixed; z-index: 901; right: 22px; bottom: 78px; width: min(300px, calc(100vw - 44px)); padding: 16px 44px 16px 18px; border: 1px solid rgba(55,69,79,.2); border-radius: 14px; background: rgba(250,243,225,.96); box-shadow: 0 18px 38px rgba(96,84,60,.22); text-align: left; }
+/* 提示框会盖住照片，所以给个看得见的关闭入口。 */
+.bgm-tip-close { position: absolute; top: 6px; right: 6px; display: grid; place-items: center; width: 36px; height: 36px; color: var(--blue); border-radius: 50%; background: transparent; font-size: 22px; line-height: 1; }
+.bgm-tip-close:hover { background: rgba(55,69,79,.08); }
+.bgm-tip-close:active { transform: scale(.9); }
 .bgm-tip strong { display: block; color: var(--ink); font: 500 16px var(--display); }
 .bgm-tip p { margin: 8px 0 12px; color: var(--muted); font-size: 12px; line-height: 1.8; }
 .bgm-tip code { padding: 1px 5px; border-radius: 6px; background: rgba(55,69,79,.08); font-size: 11px; }
@@ -362,7 +366,8 @@ body::after { position: fixed; inset: 0; z-index: 4; content: ''; pointer-events
 .bgm-tip a:hover { border-bottom-color: var(--blue); }
 @media (max-width: 800px) {
   .bgm-toggle { right: 14px; bottom: 14px; }
-  .bgm-tip { right: 14px; bottom: 68px; }
+  /* 手机屏幕上不弹出浮层，避免挡住照片；音乐仍可从右下角按钮播放。 */
+  .bgm-tip { display: none; }
 }
 
 /* 破图时浏览器会自己把 alt 画出来，和上面的提示叠成两行。
