@@ -16,18 +16,6 @@ const photoLightboxImage = document.querySelector('#photo-lightbox-image');
 const photoLightboxCount = document.querySelector('#photo-lightbox-count');
 const photoLightboxPrev = document.querySelector('#photo-lightbox-prev');
 const photoLightboxNext = document.querySelector('#photo-lightbox-next');
-const commentDialog = document.querySelector('#comment-dialog');
-const commentDialogClose = document.querySelector('#comment-dialog-close');
-const commentDialogTitle = document.querySelector('#comment-dialog-title');
-const commentSourceText = document.querySelector('#comment-source-text');
-const commentSourceName = document.querySelector('#comment-source-name');
-const commentForm = document.querySelector('#comment-form');
-const commentName = document.querySelector('#comment-name');
-const commentText = document.querySelector('#comment-text');
-const commentCount = document.querySelector('#comment-count');
-const commentStatus = document.querySelector('#comment-status');
-const commentTotal = document.querySelector('#comment-total');
-const commentList = document.querySelector('#comment-list');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const imageRoot = '锦秋团建照片/';
 let lastScene = -1;
@@ -38,11 +26,6 @@ let photoDialogScene = null;
 let photoLightboxImages = [];
 let photoLightboxIndex = 0;
 let photoLightboxReturnToArchive = false;
-let commentStorageUsable = true;
-let comments = [];
-const COMMENT_STORAGE_KEY = 'jinqiu.jeju.activity-comments.v1';
-const MAX_COMMENTS = 200;
-
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 const ease = (value) => value * value * (3 - 2 * value);
 const imageUrl = (file) => encodeURI(`${imageRoot}${file}`);
@@ -91,6 +74,11 @@ function makeFeedbackAvatar(name, className = 'feedback-avatar') {
     image.alt = `${person.displayName}头像`;
     image.loading = 'lazy';
     image.decoding = 'async';
+    // 头像加载不出来时退回姓名首字，不要留一个空圆。
+    image.addEventListener('error', () => {
+      image.remove();
+      avatar.textContent = Array.from(person.displayName)[0] || '·';
+    }, { once: true });
     avatar.append(image);
   } else {
     avatar.textContent = Array.from(person.displayName)[0] || '·';
@@ -104,39 +92,6 @@ function displayFeedbackName(name = '') {
 
 function getActivity(activityId) {
   return activitiesById.get(activityId) || activityData[0];
-}
-
-function validComment(comment) {
-  return comment && typeof comment.id === 'string' && comment.id.length <= 100 &&
-    activityData.some((activity) => activity.id === comment.activityId) &&
-    typeof comment.name === 'string' && comment.name.trim().length > 0 && comment.name.length <= 24 &&
-    typeof comment.text === 'string' && comment.text.trim().length > 0 && comment.text.length <= 500 &&
-    Number.isSafeInteger(comment.createdAt) && comment.createdAt > 0 && comment.createdAt <= 8640000000000000;
-}
-
-try {
-  const saved = localStorage.getItem(COMMENT_STORAGE_KEY);
-  if (saved !== null) {
-    const parsed = JSON.parse(saved);
-    if (parsed.version !== 1 || !Array.isArray(parsed.comments) || parsed.comments.length > MAX_COMMENTS ||
-        !parsed.comments.every(validComment) || new Set(parsed.comments.map((comment) => comment.id)).size !== parsed.comments.length) {
-      throw new Error('Invalid comment data');
-    }
-    comments = parsed.comments;
-  }
-} catch {
-  commentStorageUsable = false;
-}
-
-function persistComments() {
-  if (!commentStorageUsable) return false;
-  try {
-    localStorage.setItem(COMMENT_STORAGE_KEY, JSON.stringify({ version: 1, comments }));
-    return true;
-  } catch {
-    commentStorageUsable = false;
-    return false;
-  }
 }
 
 /* ---- 亮点卡片：点赞 + 评论（本机） ---- */
@@ -226,22 +181,59 @@ function getReactionCommentCount(key) {
   return getReaction(key).comments.length;
 }
 
+const clockFormatter = new Intl.DateTimeFormat('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false });
+const formatClock = (timestamp) => clockFormatter.format(new Date(timestamp));
+let reactionPanelSeq = 0;
+let reactionFieldSeq = 0;
+
+function syncCommentCountLabel(scope, key) {
+  const button = scope.closest('.reaction-bar')?.querySelector('.reaction-comment');
+  if (button) button.textContent = `评论 ${getReactionCommentCount(key)}`;
+}
+
+function setFieldError(field, message) {
+  field.error.textContent = message;
+  field.error.hidden = false;
+  field.control.setAttribute('aria-invalid', 'true');
+}
+
+function clearFieldError(field) {
+  field.error.textContent = '';
+  field.error.hidden = true;
+  field.control.removeAttribute('aria-invalid');
+}
+
+function setFormStatus(scope, message, warn = false) {
+  const status = scope.querySelector('.reaction-comment-status');
+  if (!status) return;
+  status.textContent = message;
+  status.hidden = !message;
+  status.classList.toggle('is-warn', warn);
+}
+
 function renderReactionComments(key, panel) {
   panel.replaceChildren();
   const entry = getReaction(key);
-  entry.comments.slice().sort((a, b) => b.createdAt - a.createdAt).forEach((comment) => {
+  const rows = entry.comments.slice().sort((a, b) => b.createdAt - a.createdAt);
+
+  if (!rows.length) {
+    panel.append(make('p', 'reaction-comment-empty', '还没有人评论，欢迎写第一条。'));
+  }
+
+  rows.forEach((comment) => {
     const row = make('div', 'reaction-comment-row');
     const head = make('div', 'reaction-comment-row-head');
-    head.append(make('strong', '', comment.name), make('time', '', new Intl.DateTimeFormat('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(comment.createdAt))));
+    head.append(make('strong', '', comment.name), make('time', '', formatClock(comment.createdAt)));
     const text = make('p', 'reaction-comment-row-text', comment.text);
     const remove = make('button', 'reaction-comment-row-delete', '删除');
     remove.type = 'button';
+    remove.setAttribute('aria-label', `删除 ${comment.name} 的这条评论`);
     remove.addEventListener('click', () => {
       entry.comments = entry.comments.filter((item) => item.id !== comment.id);
-      persistReactions();
+      const saved = persistReactions();
       renderReactionComments(key, panel);
-      const commentButton = panel.parentElement.querySelector('.reaction-comment');
-      if (commentButton) commentButton.textContent = `评论 ${getReactionCommentCount(key)}`;
+      syncCommentCountLabel(panel, key);
+      if (!saved) setFormStatus(panel, '存储不可用：这条评论刷新后会重新出现。', true);
     });
     row.append(head, text, remove);
     panel.append(row);
@@ -249,112 +241,87 @@ function renderReactionComments(key, panel) {
 
   const form = make('form', 'reaction-comment-form');
   form.setAttribute('aria-label', '写一条评论');
+  form.noValidate = true;
+
+  const buildField = (labelText, control) => {
+    const field = make('div', 'reaction-field');
+    const id = `reaction-field-${reactionFieldSeq++}`;
+    control.id = id;
+    const label = make('label', 'reaction-field-label', labelText);
+    label.htmlFor = id;
+    const error = make('p', 'reaction-field-error');
+    error.id = `${id}-error`;
+    error.hidden = true;
+    control.setAttribute('aria-describedby', error.id);
+    field.append(label, control, error);
+    return { field, control, error };
+  };
+
   const nameInput = make('input');
   nameInput.type = 'text';
   nameInput.maxLength = 24;
   nameInput.placeholder = '你的称呼';
-  nameInput.required = true;
   nameInput.autocomplete = 'off';
+  const nameField = buildField('你的称呼', nameInput);
+
   const textInput = make('textarea');
   textInput.rows = 2;
   textInput.maxLength = 200;
   textInput.placeholder = '一句评论……';
-  textInput.required = true;
+  const textField = buildField('评论内容', textInput);
+
   const submit = make('button', 'reaction-comment-form-submit', '留下评论');
   submit.type = 'submit';
-  form.append(nameInput, textInput, submit);
+
+  const status = make('p', 'reaction-comment-status');
+  status.setAttribute('role', 'status');
+  status.setAttribute('aria-live', 'polite');
+  status.hidden = true;
+
+  // 不因为「还没填完」而禁用提交：那样用户只能对着一个点不动的按钮猜原因。
+  // 允许提交、就地报错、把焦点送到第一个没填的框，更清楚。
+  const syncSubmit = () => {
+    submit.disabled = entry.comments.length >= MAX_REACTION_COMMENTS;
+  };
+
+  form.append(nameField.field, textField.field, submit, status);
+
+  if (entry.comments.length >= MAX_REACTION_COMMENTS) {
+    setFormStatus(form, `这条评论已达 ${MAX_REACTION_COMMENTS} 条上限，删掉一些才能继续写。`, true);
+  }
+  syncSubmit();
+  nameInput.addEventListener('input', () => clearFieldError(nameField));
+  textInput.addEventListener('input', () => clearFieldError(textField));
+
   form.addEventListener('submit', (event) => {
     event.preventDefault();
+    if (submit.disabled) return;
     const name = nameInput.value.trim();
-    const text = textInput.value.trim();
-    nameInput.setCustomValidity(name ? '' : '请填写称呼。');
-    textInput.setCustomValidity(text ? '' : '请写一点评论。');
-    if (!form.reportValidity()) return;
-    if (entry.comments.length >= MAX_REACTION_COMMENTS) {
-      textInput.setCustomValidity('已达到评论上限，请先删除一些。');
-      form.reportValidity();
-      textInput.setCustomValidity('');
-      return;
-    }
+    const commentText = textInput.value.trim();
+    let firstInvalid = null;
+    if (!name) { setFieldError(nameField, '请填写称呼。'); firstInvalid = nameInput; }
+    else clearFieldError(nameField);
+    if (!commentText) { setFieldError(textField, '请写一句评论。'); firstInvalid = firstInvalid || textInput; }
+    else clearFieldError(textField);
+    if (firstInvalid) { firstInvalid.focus(); return; }
+
+    submit.disabled = true;
     entry.comments.push({
       id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
       name,
-      text,
+      text: commentText,
       createdAt: Date.now()
     });
-    persistReactions();
-    textInput.value = '';
+    const saved = persistReactions();
     renderReactionComments(key, panel);
-    const commentButton = panel.parentElement.querySelector('.reaction-comment');
-    if (commentButton) commentButton.textContent = `评论 ${getReactionCommentCount(key)}`;
+    syncCommentCountLabel(panel, key);
+    // 本机存储写不进去时也留在页面上，但要告诉用户刷新会丢。
+    setFormStatus(panel, saved ? '已评论，保存在这台电脑上。' : '存储不可用：这条评论刷新后会丢失。', !saved);
   });
+
   panel.append(form);
 }
 
-
-function setCommentStatus(message, error = false) {
-  commentStatus.textContent = message;
-  commentStatus.classList.toggle('is-error', error);
-}
-
-function renderComments() {
-  const scene = scenes[commentSceneIndex];
-  const visible = comments
-    .filter((comment) => scene.activityIds.includes(comment.activityId))
-    .sort((a, b) => b.createdAt - a.createdAt);
-  commentTotal.textContent = String(visible.length);
-  commentList.replaceChildren();
-  if (!visible.length) {
-    const empty = make('div', 'comment-empty');
-    empty.append(make('strong', '', '这里还空着，留给你的视角。'), make('p', '', '不必写完整总结，一句你记住的细节就很好。'));
-    commentList.append(empty);
-    return;
-  }
-  visible.forEach((comment) => {
-    const card = make('article', 'comment-card');
-    const head = make('div', 'comment-card-head');
-    head.append(make('span', 'comment-avatar', Array.from(comment.name)[0] || '·'), make('strong', '', comment.name));
-    const time = make('time', '', new Intl.DateTimeFormat('zh-CN', {
-      month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false
-    }).format(new Date(comment.createdAt)));
-    time.dateTime = new Date(comment.createdAt).toISOString();
-    head.append(time);
-    const body = make('p', 'comment-body', comment.text);
-    const remove = make('button', 'comment-delete', '删除这条本机留言');
-    remove.type = 'button';
-    remove.addEventListener('click', () => {
-      if (!window.confirm('删除这条本机留言？此操作不能撤销。')) return;
-      comments = comments.filter((item) => item.id !== comment.id);
-      const saved = persistComments();
-      renderComments();
-      setCommentStatus(saved ? '已删除这条本机留言。' : '已从本次页面移除；存储不可用，刷新后旧留言可能重新出现。', !saved);
-    });
-    card.append(head, body, remove);
-    commentList.append(card);
-  });
-}
-
-function updateCommentCount() {
-  commentText.setCustomValidity('');
-  commentCount.textContent = `${commentText.value.length} / 500`;
-}
-
-function openSceneComments(sceneIndex, trigger) {
-  const scene = scenes[sceneIndex];
-  if (!scene || !commentDialog) return;
-  const source = getActivity(scene.commentId);
-  commentSceneIndex = sceneIndex;
-  lastCommentTrigger = trigger || null;
-  commentDialogTitle.textContent = '欢迎JQer留下你的评论';
-  commentSourceText.textContent = source.feedback.quote;
-  commentSourceName.textContent = `— ${displayFeedbackName(source.feedback.source)}`;
-  commentForm.reset();
-  updateCommentCount();
-  setCommentStatus(commentStorageUsable ? '' : '本机存储不可用；这次留言只会暂时留在当前页面。', !commentStorageUsable);
-  renderComments();
-  if (!commentDialog.open) commentDialog.showModal();
-  window.requestAnimationFrame(() => commentName.focus({ preventScroll: true }));
-}
 
 function renderPhotoGrid(title, images, selectedIndex = 0) {
   photoDialogScene = null;
@@ -369,6 +336,7 @@ function renderPhotoGrid(title, images, selectedIndex = 0) {
     image.alt = `${title}照片`;
     image.loading = index < 4 ? 'eager' : 'lazy';
     image.decoding = 'async';
+    markLoading(button);
     button.append(image);
     button.addEventListener('click', () => {
       photoDialogGrid.querySelectorAll('.archive-photo.is-focus').forEach((item) => item.classList.remove('is-focus'));
@@ -424,34 +392,6 @@ function openSceneArchive(sceneIndex, selectedIndex = 0, trigger) {
   });
 }
 
-commentText.addEventListener('input', updateCommentCount);
-commentName.addEventListener('input', () => commentName.setCustomValidity(''));
-commentForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  const name = commentName.value.trim();
-  const text = commentText.value.trim();
-  commentName.setCustomValidity(name ? '' : '请填写称呼，不能只输入空格。');
-  commentText.setCustomValidity(text ? '' : '请写一点想法，不能只输入空格。');
-  if (!commentForm.reportValidity()) return;
-  if (comments.length >= MAX_COMMENTS) {
-    setCommentStatus('已达到 200 条本机预览留言上限。请先删除不需要的留言。', true);
-    return;
-  }
-  comments.push({
-    id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-    activityId: scenes[commentSceneIndex].commentId,
-    name,
-    text,
-    createdAt: Date.now()
-  });
-  const saved = persistComments();
-  commentText.value = '';
-  updateCommentCount();
-  renderComments();
-  setCommentStatus(saved ? '留言已保存在这台电脑上。' : '已放入本次页面；本机存储不可用，刷新后这条留言不会保留。', !saved);
-  commentText.focus({ preventScroll: true });
-});
-
 photoDialogClose.addEventListener('click', () => photoDialog.close());
 photoDialog.addEventListener('click', (event) => {
   if (event.target === photoDialog) photoDialog.close();
@@ -483,13 +423,6 @@ document.addEventListener('keydown', (event) => {
   if (event.key === 'ArrowLeft') movePhotoLightbox(-1);
   if (event.key === 'ArrowRight') movePhotoLightbox(1);
 });
-commentDialogClose.addEventListener('click', () => commentDialog.close());
-commentDialog.addEventListener('click', (event) => {
-  if (event.target === commentDialog) commentDialog.close();
-});
-commentDialog.addEventListener('close', () => {
-  if (lastCommentTrigger?.isConnected) lastCommentTrigger.focus({ preventScroll: true });
-});
 function buildReactionBar(key) {
   const bar = make('div', 'reaction-bar');
   const likeButton = make('button', 'reaction-like', `赞 ${getReactionLikeCount(key)}`);
@@ -500,15 +433,23 @@ function buildReactionBar(key) {
   const commentButton = make('button', 'reaction-comment', `评论 ${getReactionCommentCount(key)}`);
   commentButton.type = 'button';
   commentButton.setAttribute('aria-expanded', 'false');
-  const commentPanel = make('div', 'reaction-comment-panel');
-  commentPanel.hidden = true;
+  // 面板常驻 DOM，靠 is-open 过渡展开；内容首次展开时才渲染。
+  const panel = make('div', 'reaction-comment-panel');
+  panel.id = `reaction-panel-${reactionPanelSeq++}`;
+  commentButton.setAttribute('aria-controls', panel.id);
+  // 三层：外层负责折叠动画，中层负责裁切，最内层承担留白与边框。
+  const inner = make('div', 'reaction-comment-panel-inner');
+  const box = make('div', 'reaction-comment-panel-box');
+  inner.append(box);
+  panel.append(inner);
+  let rendered = false;
   commentButton.addEventListener('click', () => {
-    const willOpen = commentPanel.hidden;
-    commentPanel.hidden = !willOpen;
+    const willOpen = !panel.classList.contains('is-open');
+    if (willOpen && !rendered) { renderReactionComments(key, box); rendered = true; }
+    panel.classList.toggle('is-open', willOpen);
     commentButton.setAttribute('aria-expanded', String(willOpen));
-    if (willOpen) renderReactionComments(key, commentPanel);
   });
-  bar.append(likeButton, commentButton, commentPanel);
+  bar.append(likeButton, commentButton, panel);
   return bar;
 }
 
@@ -538,6 +479,7 @@ function renderVarietyCard(scene, data, cardIndex) {
   photoImage.alt = `${scene.title}现场照片`;
   photoImage.loading = 'lazy';
   photoImage.decoding = 'async';
+  markLoading(photoButton);
   photoButton.append(photoImage);
   const imageIndex = scene.allImages.findIndex((file) => file === data.image);
   photoButton.addEventListener('click', () => openSceneArchive(sceneIndex, imageIndex === -1 ? 0 : imageIndex, photoButton));
@@ -582,6 +524,7 @@ function renderStation(index) {
     thumbImg.alt = '';
     thumbImg.loading = 'lazy';
     thumbImg.decoding = 'async';
+    markLoading(thumb);
     thumb.append(thumbImg);
     thumb.addEventListener('click', () => openSceneArchive(index, i, thumb));
     aside.append(thumb);
@@ -661,7 +604,9 @@ function observeReveal(selector, stagger = 0) {
       element.dataset.revealed = '1';
       observer.unobserve(element);
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    // 采集入场时元素已经超过一屏高，用比例阈值会永远触发不了，
+    // 所以只要求「顶部进入视口」即可。
+  }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
   nodes.forEach((node, index) => {
     if (stagger) node.style.transitionDelay = `${Math.min(index * stagger, 600)}ms`;
     observer.observe(node);
@@ -780,3 +725,67 @@ bgmToggle.addEventListener('click', () => {
   }
 });
 bgmTip.addEventListener('click', () => { bgmTip.hidden = true; });
+
+/* ---- 图片的加载中 / 加载失败状态 ----
+   load 和 error 不冒泡，但能在捕获阶段拿到，所以效劳一次全局监听即可。 */
+function markLoading(container) {
+  container?.classList.add('is-loading');
+  container?.closest('button,figure')?.classList.remove('has-broken-image');
+}
+
+document.addEventListener('load', (event) => {
+  const image = event.target;
+  if (!image || image.tagName !== 'IMG') return;
+  image.classList.remove('is-loading');
+  image.parentElement?.classList.remove('is-loading');
+  image.closest('button,figure')?.classList.remove('has-broken-image');
+}, true);
+
+document.addEventListener('error', (event) => {
+  const image = event.target;
+  if (!image || image.tagName !== 'IMG') return;
+  image.classList.remove('is-loading');
+  image.parentElement?.classList.remove('is-loading');
+  image.closest('button,figure')?.classList.add('has-broken-image');
+}, true);
+
+/* ---- 手机端板块跳转：标出当前所在的板块 ---- */
+const stationNav = document.querySelector('#station-nav');
+if (stationNav) {
+  const links = [...stationNav.querySelectorAll('a')];
+  const stops = links
+    .map((link) => document.querySelector(link.getAttribute('href')))
+    .filter(Boolean);
+  const navCompact = window.matchMedia('(max-width: 800px)');
+  let navTick = false;
+
+  const paintNav = () => {
+    navTick = false;
+    if (!navCompact.matches) return;
+    const line = window.innerHeight * 0.35;
+    let currentId = stops[0]?.id;
+    stops.forEach((stop) => { if (stop.getBoundingClientRect().top <= line) currentId = stop.id; });
+    let activeLink = null;
+    links.forEach((link) => {
+      const on = link.getAttribute('href') === `#${currentId}`;
+      link.classList.toggle('is-current', on);
+      if (on) activeLink = link;
+    });
+    // 只滑动导航自身，不要连带页面上下跳。
+    if (activeLink) {
+      const bar = stationNav.getBoundingClientRect();
+      const chip = activeLink.getBoundingClientRect();
+      if (chip.left < bar.left || chip.right > bar.right) {
+        stationNav.scrollLeft += chip.left - bar.left - 16;
+      }
+    }
+  };
+
+  window.addEventListener('scroll', () => {
+    if (navTick) return;
+    navTick = true;
+    window.requestAnimationFrame(paintNav);
+  }, { passive: true });
+  window.addEventListener('resize', paintNav);
+  paintNav();
+}
