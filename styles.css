@@ -124,7 +124,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
   .video-brand { padding: 16px 20px; }
   .video-area { padding: 76px 0 84px; }
   .video-hero { min-height: 100svh; padding: 65px 0 58px; }
-  .video-hero .video-frame { margin-bottom: 20px; }  .video-lede { font-size: 14px; }
+  .video-hero .video-frame { margin-bottom: 20px; }
   .route-footer { flex-wrap: wrap; padding: 24px; }
   .route-footer > span { width: 100%; }
 }
@@ -309,7 +309,6 @@ body::after { position: fixed; inset: 0; z-index: 4; content: ''; pointer-events
 
 
 /* ---- 首屏：一句说明这是什么 + 一个主按钮 ---- */
-.video-lede { max-width: 620px; margin: 0 auto 30px; color: var(--muted); font-size: 15px; line-height: 1.9; }
 .video-cta { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 15px 34px; color: #fff; border-radius: 999px; background: var(--cyan); font: 700 15px/1 var(--display); letter-spacing: .04em; box-shadow: 0 14px 28px rgba(185,122,78,.26); transition: background .2s ease, transform .12s ease, box-shadow .2s ease; }
 .video-cta:hover { background: var(--blue); }
 .video-cta:active { transform: translateY(1px) scale(.98); box-shadow: 0 7px 16px rgba(185,122,78,.24); }
