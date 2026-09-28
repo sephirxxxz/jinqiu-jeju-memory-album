@@ -278,7 +278,6 @@ html.js-reveal .highlight-card.is-visible { opacity: 1; visibility: visible; tra
 .variety-photo:active img, .road-thumb:active img, .archive-photo:active img { transform: scale(.97); filter: brightness(.96); }
 .road-thumb-more:active { transform: scale(.94); }
 .variety-caption { display: block; margin-top: 11px; }
-.variety-tag { display: inline-block; padding: 3px 9px; color: #fff; border-radius: 999px; background: var(--cyan); font: 700 10px/1 var(--mono); letter-spacing: .06em; }
 .variety-quote-wrap { margin-top: 9px; padding-left: 10px; border-left: 2px solid rgba(185,122,78,.5); }
 .variety-quote { margin: 0; color: var(--ink); font: 14px/1.85 var(--display); }
 .variety-who { display: flex; align-items: center; gap: 7px; margin-top: 8px; color: var(--blue-soft); font: 10px var(--mono); }

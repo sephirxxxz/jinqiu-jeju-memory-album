@@ -484,7 +484,6 @@ function renderVarietyCard(scene, data, cardIndex) {
   const imageIndex = scene.allImages.findIndex((file) => file === data.image);
   photoButton.addEventListener('click', () => openSceneArchive(sceneIndex, imageIndex === -1 ? 0 : imageIndex, photoButton));
   const caption = make('figcaption', 'variety-caption');
-  if (data.tag) caption.append(make('span', 'variety-tag', data.tag));
   const quoteWrap = make('div', 'variety-quote-wrap');
   const varietyWho = make('span', 'variety-who');
   varietyWho.append(makeFeedbackAvatar(data.who, 'variety-avatar'), make('span', 'variety-who-name', displayFeedbackName(data.who)));
