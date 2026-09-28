@@ -1,4 +1,4 @@
-/* 六个主路站点的提炼回答：按环节（问题）归属到对应站点。
+/* 主路站点的提炼回答：按环节（问题）归属到对应站点。
    每条都来自《2026H2济州岛团建活动反馈收集》原文，只做凝练，不改事实。
    几乎没有内容或纯客套的回答（如“暂时没什么，非常好”）已省略。 */
 
@@ -215,15 +215,6 @@ const sceneDetails = {
     ]
   }
 };
-
-// 撕名牌并入沙滩运动会，原卡片的本机点赞和评论沿用原来的存储键。
-sceneDetails['beach-road'].variety.cards.push(
-  ...sceneDetails['tag-road'].variety.cards.map((card, index) => ({
-    ...card,
-    tag: `撕名牌 · ${card.tag}`,
-    reactionKey: `撕名牌大战-${index}`
-  }))
-);
 
 /* 结尾总区：大家对同事的整体观察 + 给下一次团建的建议（第 5、6 问提炼）。 */
 const feedbackSuggestions = [

@@ -171,11 +171,24 @@ const roadData = [
     "subtitle": "把讨论变成一起行动",
     "description": "风、沙滩、协作，以及想赢的那一刻。",
     "commentId": "sports",
-    "activityIds": ["sports", "fight", "sword", "tug", "connect4", "tag"],
+    "activityIds": ["sports", "fight", "sword", "tug", "connect4"],
     "images": [
       "image.png", "IMG_7748.JPG.jpeg", "IMG_20260916_113755.jpg", "IMG_20260916_115917.jpg",
       "IMG_20260916_093030.jpg", "IMG_20260916_103413.jpg", "IMG_20260916_102641_1.jpg",
       "IMG_7786.JPG.jpeg", "IMG_7717.JPG.jpeg", "IMG_7728.JPG.jpeg"
+    ]
+  },
+  {
+    "id": "tag-road",
+    "title": "撕名牌大战，跑起来再说",
+    "reactionTitle": "撕名牌大战",
+    "subtitle": "五分钟全力奔跑",
+    "description": "在草地上全力以赴，看看彼此在办公室之外的一面。",
+    "commentId": "tag",
+    "activityIds": ["tag"],
+    "images": [
+      "image_8.png", "image_12.png", "image_14.png", "image_35.png", "image_10.png",
+      "image_22.png", "image_27.png", "image_30.png", "image_33.png"
     ]
   },
   {
