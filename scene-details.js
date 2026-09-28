@@ -58,7 +58,6 @@ const sceneDetails = {
         { "image": "IMG_20260916_115917.jpg", "tag": "四子棋", "quote": "最大的风险有时不是看错对手，而是看不见自己已有的优势。", "who": "张旭" },
         { "image": "IMG_7717.JPG.jpeg", "tag": "赛场边", "quote": "卧底环节的收获：还是要足够相信自己的判断。", "who": "肖杨" },
         { "image": "IMG_7728.JPG.jpeg", "tag": "场边花絮", "quote": "更了解了大家的性格、胜负欲，这些平时工作里体现不多。", "who": "诺诺" },
-        { "image": "IMG_20260916_093030.jpg", "tag": "开场", "quote": "闭门会 + 有体力要求的团建，这届形式拿捏了。", "who": "周琪" }
       ]
     },
     highlights: [
@@ -101,7 +100,6 @@ const sceneDetails = {
         { "image": "团队拍摄17.png", "tag": "团队拍摄", "quote": "龙杰反应快又有责任意识，各个智力环节都自告奋勇。", "who": "梦真" },
         { "image": "image_3.png", "tag": "岔路口", "quote": "一群人停下来商量，再继续往前走。", "who": "梦真" },
         { "image": "2026-09-16 230403_20260916_225024.jpg", "tag": "高能时刻", "quote": "体力、智力都在线，名场面预警。", "who": "乔众龙" },
-        { "image": "image_6.png", "tag": "通关现场", "quote": "团队协作确实增进了感情。", "who": "诺诺" },
         { "image": "瑜伽10.png", "tag": "晚间表情包", "quote": "白天迷宫烧脑，晚上表情包回血——零散时间也增进了解。", "who": "张旭" },
         { "image": "地铁老人手机1.png", "tag": "表情包现场", "quote": "感觉更了解了大家的一些性格，平时不一定能看到。", "who": "肖杨" },
         { "image": "数字莲华：三头六臂重构计划17.png", "tag": "花絮", "quote": "后两天是同事层面，对大家的性格、偏好都更熟悉了。", "who": "诺诺" }
@@ -136,7 +134,6 @@ const sceneDetails = {
         { "image": "image_14.png", "tag": "战斗力", "quote": "发现团队同学都很有活力，尤其一些女生战斗力很强。", "who": "周琪" },
         { "image": "image_35.png", "tag": "战术观察", "quote": "有人低调避战、有人稳守、有人与队友联动——都成功留到最后。", "who": "张旭" },
         { "image": "image_10.png", "tag": "对决", "quote": "选对策略之后，更重要的是坚定执行。", "who": "张旭" },
-        { "image": "image_16.png", "tag": "追捕中", "quote": "感觉了解到了很多同事更加生活化的一面。", "who": "诺诺" },
         { "image": "image_22.png", "tag": "拉扯", "quote": "赛场上全力以赴，活力全开。", "who": "石头" },
         { "image": "image_27.png", "tag": "五分钟后", "quote": "让我感到自己也能有“攻击性”和“狠人属性”。", "who": "梦真" },
         { "image": "image_30.png", "tag": "名场面", "quote": "大家在赛场上想赢敢拼，展现了蓬勃的活力。", "who": "石头" },
@@ -173,6 +170,7 @@ const sceneDetails = {
   },
   "food-road": {
     titleClass: "scene-title-food",
+    hideWordmark: true,
     highlights: [
       {
         name: "石头",
@@ -229,16 +227,6 @@ sceneDetails['beach-road'].variety.cards.push(
 
 /* 结尾总区：大家对同事的整体观察 + 给下一次团建的建议（第 5、6 问提炼）。 */
 const feedbackSuggestions = [
-  {
-    name: "石头",
-    source: "对同事的新发现",
-    text: "发现同事们的运动能力都相当出色，这和平时在办公室里的印象很不一样，是一个意外的小惊喜。"
-  },
-  {
-    name: "周琪",
-    source: "对同事的新发现",
-    text: "发现大家都非常 team work，想赢得比赛胜利。"
-  },
   {
     name: "晓超",
     source: "对同事的新发现",

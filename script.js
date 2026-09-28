@@ -94,6 +94,27 @@ function getActivity(activityId) {
   return activitiesById.get(activityId) || activityData[0];
 }
 
+/* 两段话说的是不是同一件事。
+   只用 includes 不够：同一句话在不同回答里会被缩写、换词，
+   所以按二字组算重叠比例，达到七成就算重复。 */
+function sameWording(a, b) {
+  const clean = (text) => (text || '').replace(/[\s，。、；：！？,.!?;:“”"'（）()·…—-]/g, '');
+  const x = clean(a);
+  const y = clean(b);
+  if (!x || !y) return false;
+  if (x.includes(y) || y.includes(x)) return true;
+  const grams = (text) => {
+    const set = new Set();
+    for (let i = 0; i < text.length - 1; i++) set.add(text.slice(i, i + 2));
+    return set;
+  };
+  const gx = grams(x);
+  const gy = grams(y);
+  let hit = 0;
+  gx.forEach((gram) => { if (gy.has(gram)) hit += 1; });
+  return hit / Math.min(gx.size, gy.size) >= 0.7;
+}
+
 /* ---- 亮点卡片：点赞 + 评论（本机） ---- */
 const REACTION_STORAGE_KEY = 'jinqiu.jeju.reactions.v1';
 const MAX_REACTION_COMMENTS = 100;
@@ -541,18 +562,23 @@ function renderStation(index) {
   const surface = make('div', 'road-surface');
   const centerLine = make('div', 'road-center-line');
   const wordmark = make('div', 'road-wordmark', 'WIN BIG');
-  world.append(surface, centerLine, wordmark);
+  world.append(surface, centerLine);
+  // 烤肉烧酒那一站不要 WIN BIG 牌子。
+  if (!details.hideWordmark) world.append(wordmark);
 
   const echo = make('section', 'station-echo');
   const grid = make('div', 'variety-grid');
   let cards = details.variety?.cards;
   if (!cards) {
     const source = getActivity(scene.commentId);
+    const highlights = details.highlights || [];
+    // 这一站的引言如果本来就和三张里的某条同源，就不再单独占一张卡片。
+    const quote = source.feedback.quote;
+    const repeatsHighlight = highlights.some((item) => sameWording(item.text, quote));
     cards = [
-      { tag: source.feedback.prompt, quote: source.feedback.quote, who: source.feedback.source,
-        reactionKey: `${scene.reactionTitle}-source` },
-      ...(details.highlights || []).map((item, i) => ({
-        tag: item.source, quote: item.text, who: item.name,
+      ...(repeatsHighlight ? [] : [{ quote, who: source.feedback.source, reactionKey: `${scene.reactionTitle}-source` }]),
+      ...highlights.map((item, i) => ({
+        quote: item.text, who: item.name,
         reactionKey: `${scene.reactionTitle}-${i}`
       }))
     ].map((item, i) => ({ ...item, image: scene.allImages[i % scene.allImages.length] }));
