@@ -60,7 +60,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
 @starting-style {
   .photo-dialog[open]::backdrop, .photo-lightbox[open]::backdrop { opacity: 0; }
 }
-.photo-dialog::backdrop { background: rgba(43,36,26,.35); backdrop-filter: blur(4px); }
+.photo-dialog::backdrop { background: rgba(43,36,26,.35); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
 .photo-dialog-inner { position: relative; max-height: min(90svh, 900px); overflow-y: auto; padding: 43px 48px 45px; }
 .photo-dialog-close { position: absolute; z-index: 2; top: 14px; right: 16px; display: grid; place-items: center; width: 44px; height: 44px; color: var(--blue); border-radius: 50%; background: rgba(255,255,255,.8); font-size: 27px; line-height: 1; transition: background .2s ease, transform .12s ease; }
 .photo-dialog-close:active, .photo-lightbox-close:active { transform: scale(.9); }
@@ -70,7 +70,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
 .archive-photo img { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
 .archive-photo:hover, .archive-photo.is-focus { z-index: 1; box-shadow: 0 13px 28px rgba(88,74,52,.2); transform: translateY(-3px); }
 .photo-lightbox { width: min(960px, calc(100vw - 28px)); max-width: none; max-height: min(94svh, 960px); padding: 0; color: var(--ink); border: 1px solid var(--line); border-radius: 22px; background: #fdf9ee; box-shadow: 0 28px 90px rgba(43,36,26,.3); }
-.photo-lightbox::backdrop { background: rgba(43,36,26,.58); backdrop-filter: blur(7px); }
+.photo-lightbox::backdrop { background: rgba(43,36,26,.58); -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px); }
 .photo-lightbox-inner { position: relative; max-height: min(94svh, 960px); overflow-y: auto; padding: 34px 40px 30px; text-align: center; }
 .photo-lightbox-close { position: absolute; z-index: 2; top: 12px; right: 14px; display: grid; place-items: center; width: 44px; height: 44px; color: var(--blue); border: 1px solid var(--line); border-radius: 50%; background: rgba(255,255,255,.88); font-size: 27px; line-height: 1; transition: background .2s ease, transform .12s ease; }
 .photo-lightbox h2 { margin: 0 0 18px; font: 500 clamp(28px, 4vw, 50px)/1.1 var(--display); letter-spacing: -.06em; }
@@ -116,7 +116,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
   .photo-dialog-close { top: 12px; right: 13px; }
   .photo-lightbox { width: calc(100vw - 16px); max-height: 94svh; }
   .photo-lightbox-inner { max-height: 94svh; padding: 29px 12px 22px; }
-  .photo-lightbox-close { top: 9px; right: 9px; width: 34px; height: 34px; }
+  .photo-lightbox-close { top: 9px; right: 9px; }
   .photo-lightbox h2 { margin-bottom: 13px; font-size: 34px; }
   .photo-lightbox-figure img { max-height: 62svh; border-radius: 9px; }
   .photo-lightbox-controls { gap: 8px; margin-top: 13px; }
@@ -318,7 +318,7 @@ body::after { position: fixed; inset: 0; z-index: 4; content: ''; pointer-events
 /* 整页在手机上约 33 屏，没有跳转只能一路滑。桌面上隐藏，保持版面干净。 */
 .station-nav { display: none; }
 @media (max-width: 800px) {
-  .station-nav { position: sticky; z-index: 60; top: 0; display: flex; gap: 8px; padding: 10px 14px; overflow-x: auto; border-bottom: 1px solid var(--line); background: rgba(244,238,225,.94); backdrop-filter: blur(8px); scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .station-nav { position: sticky; z-index: 60; top: 0; display: flex; gap: 8px; padding: 10px 14px; overflow-x: auto; border-bottom: 1px solid var(--line); background: rgba(244,238,225,.94); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .station-nav::-webkit-scrollbar { display: none; }
   .station-nav a { display: inline-flex; flex: 0 0 auto; align-items: center; min-height: 44px; padding: 0 18px; color: var(--blue); border: 1px solid rgba(55,69,79,.18); border-radius: 999px; background: rgba(255,255,255,.72); font-size: 15px; transition: background .2s ease, color .2s ease, border-color .2s ease, transform .12s ease; }
   .station-nav a.is-current { color: #fff; border-color: var(--cyan); background: var(--cyan); }
@@ -335,7 +335,7 @@ body::after { position: fixed; inset: 0; z-index: 4; content: ''; pointer-events
 .video-hero-inner { width: min(1000px, 92vw); margin: 0 auto; text-align: center; }
 .video-frame {  position: relative; width: min(920px, 90vw); margin: 0 auto 34px; padding: 12px; border: 1px solid rgba(55,69,79,.18); border-radius: 18px; background: rgba(248,241,227,.92); box-shadow: 0 24px 46px rgba(96,84,60,.16), 0 5px 0 rgba(250,243,225,.7); }
 .video-frame video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 10px; background: #1f1d18; }
-.video-play { position: absolute; top: 50%; left: 50%; display: grid; place-items: center; width: 84px; height: 84px; padding: 0; color: #fff; border: 2px solid rgba(255,255,255,.85); border-radius: 50%; background: rgba(55,69,79,.55); backdrop-filter: blur(3px); transform: translate(-50%, -50%); transition: transform .2s ease, background .2s ease; }
+.video-play { position: absolute; top: 50%; left: 50%; display: grid; place-items: center; width: 84px; height: 84px; padding: 0; color: #fff; border: 2px solid rgba(255,255,255,.85); border-radius: 50%; background: rgba(55,69,79,.55); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); transform: translate(-50%, -50%); transition: transform .2s ease, background .2s ease; }
 .video-play span { margin-left: 6px; font-size: 28px; line-height: 1; }
 .video-play:hover { background: rgba(185,122,78,.8); transform: translate(-50%, -50%) scale(1.06); }
 .video-play:active { transform: translate(-50%, -50%) scale(.97); background: rgba(55,69,79,.75); }
