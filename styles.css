@@ -152,7 +152,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-
 .scene-title::after { position: absolute; right: -4px; bottom: 0; content: ''; width: 76%; height: 7px; border-radius: 90% 25% 60% 15%; background: rgba(245,160,79,.4); transform: rotate(-2deg); }
 .scene-title-beach { transform: rotate(-1.5deg); }
 .scene-title-beach::after { background: rgba(185,122,78,.28); transform: rotate(2deg); }
-.scene-title-tag { text-shadow: 3px 3px 0 rgba(239,130,93,.2); }
 .scene-title-tag::after { height: 12px; background: rgba(235,108,83,.2); clip-path: polygon(0 10%, 16% 0, 31% 16%, 48% 3%, 67% 20%, 84% 4%, 100% 12%, 94% 100%, 73% 85%, 56% 100%, 35% 84%, 15% 100%); }
 .scene-title-food::after { width: 100%; height: 3px; background: #df8c55; transform: rotate(-1deg); }
 .scene-title-mountain::before { position: absolute; left: 35%; bottom: -1px; content: '▲'; color: rgba(71,125,107,.32); font-size: 22px; transform: translateY(3px); }
