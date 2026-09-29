@@ -101,7 +101,7 @@ const activityData = [
     "id": "tag",
     "number": "08",
     "title": "撕名牌大战",
-    "subtitle": "跑起来再说",
+    "subtitle": "每一刻都拼尽全力",
     "description": "五分钟全力奔跑，把办公室之外的那一面释放出来。",
     "feedback": {
       "source": "梦真",
@@ -179,19 +179,6 @@ const roadData = [
     ]
   },
   {
-    "id": "tag-road",
-    "title": "撕名牌大战，跑起来再说",
-    "reactionTitle": "撕名牌大战",
-    "subtitle": "五分钟全力奔跑",
-    "description": "在草地上全力以赴，看看彼此在办公室之外的一面。",
-    "commentId": "tag",
-    "activityIds": ["tag"],
-    "images": [
-      "image_8.png", "image_12.png", "image_14.png", "image_35.png", "image_10.png",
-      "image_22.png", "image_27.png", "image_30.png", "image_33.png"
-    ]
-  },
-  {
     "id": "maze-road",
     "title": "花园迷宫，打破常规路径",
     "reactionTitle": "花园迷宫",
@@ -203,6 +190,19 @@ const roadData = [
       "image_2.png", "2026-09-16 230528_20260916_225131_20260916_225132.jpg", "image_7.png", "团队拍摄17.png",
       "image_3.png", "2026-09-16 230403_20260916_225024.jpg", "image_6.png",
       "瑜伽10.png", "地铁老人手机1.png", "数字莲华：三头六臂重构计划17.png"
+    ]
+  },
+  {
+    "id": "tag-road",
+    "title": "撕名牌大战，每一刻都拼尽全力",
+    "reactionTitle": "撕名牌大战",
+    "subtitle": "五分钟全力奔跑",
+    "description": "在草地上全力以赴，看看彼此在办公室之外的一面。",
+    "commentId": "tag",
+    "activityIds": ["tag"],
+    "images": [
+      "image_8.png", "image_12.png", "image_14.png", "image_35.png", "image_10.png",
+      "image_22.png", "image_27.png", "image_30.png", "image_33.png"
     ]
   },
   {
